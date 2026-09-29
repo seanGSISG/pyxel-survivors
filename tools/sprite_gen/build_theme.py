@@ -9,9 +9,11 @@ art.py loads this exactly like the wiki atlas: every enemy id points at its
 family's sprite, and big variants and bosses are re-pixelized larger from the
 same render rather than upscaled.
 
-Characters and enemies get a short movement cycle derived from their one picked
-sprite (see step_cycle), so the design is identical in every frame. Identical
-frames are packed once and shared by every key that uses them.
+Characters and enemies move on four frames: the picked sprite, then the three
+poses pose.py drew of it (pose_cycle). A design without pose frames gets a small
+derived shuffle instead (step_cycle). Frames are padded evenly around the picked
+sprite, whose size stays the sprite's body size in atlas.json, so hitboxes and
+placement do not change. Identical frames are packed once and shared.
 """
 
 import json
@@ -24,7 +26,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 from build_atlas import KEY, pack  # noqa: E402
-from pixelize import BASE, NEON, pixelize  # noqa: E402
+from pixelize import BASE, NEON, pixelize, pixelize_pose  # noqa: E402
+from pose import MOVE_OF  # noqa: E402
 
 RAW = HERE / "raw" / "qpixel0.5"
 OUT = ROOT / "themes" / "nineties"
@@ -161,14 +164,56 @@ CAST = {
 CAST_OF = {eid: tid for tid, eids in CAST.items() for eid in eids}
 
 
-# These hover instead of walking: their cycle is a bob, not a step.
-FLOATERS = {"mon_pizza_bat", "mon_vhs_ghost", "mon_crt_head", "mon_slime_jelly", "mon_dialup_demon",
-            "mon_late_fee", "mon_glutton_ghost", "mon_eyeball_orb", "mon_squid", "mon_thwomper",
-            "mon_whirl_devil", "vil_dr_yolk", "char_couch"}
+POSE_AREA = (0.6, 1.6)  # accepted bounding-box area of a pose, relative to its picked sprite
+# Poses the edit model got wrong on review (it grew the creature a new body, or added a person):
+# the picked sprite stands in, and still hops or bobs with the cycle.
+BAD_POSES = {"mon_arcade_mimic": "abc", "mon_crt_head": "ab", "vil_sea_witch": "ab",
+             "mon_chattering_teeth": "b", "mon_grass_pot": "b", "mon_shroom": "b", "mon_tomato": "b",
+             "mon_thwomper": "b", "mon_eyeball_orb": "b", "mon_beanbag_bear": "b"}
+
+
+def centroid(img, top=1.0):
+    """Centre of the opaque pixels in the upper `top` share of the image."""
+    w, h = img.size
+    alpha = img.getchannel("A").crop((0, 0, w, max(1, round(h * top)))).load()
+    pts = [(x, y) for y in range(max(1, round(h * top))) for x in range(w) if alpha[x, y]]
+    return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)) if pts else (w / 2, h / 2)
+
+
+def pose_cycle(ref, poses, move):
+    """The picked sprite and its re-posed frames on one canvas, the picked sprite dead centre.
+
+    Walkers and hoppers stand on the same ground line and line up on their upper body, so a
+    stride moves the legs and not the head. Flyers and floaters line up on their centre of
+    mass and ride a pixel up and down. A hop's middle pose is lifted clear of the ground.
+    """
+    grounded = move in ("walk", "hop")
+    # a pose that covers far more or less than the picked sprite drew something else: stand in
+    # the picked sprite (by area, as a stretch or a raised wing changes the shape, not the bulk)
+    lo, hi = POSE_AREA
+    area = ref.width * ref.height
+    poses = [p if lo <= p.width * p.height / area <= hi else ref for p in poses]
+    cx, cy = centroid(ref, 0.45 if grounded else 1.0)
+    placed = [(ref, 0, 0)]
+    for n, img in enumerate(poses):
+        px, py = centroid(img, 0.45 if grounded else 1.0)
+        if grounded:
+            y = ref.height - img.height - (3 if move == "hop" and n == 1 else 0)
+        else:
+            y = round(cy - py) + (n - 1)
+        placed.append((img, round(cx - px), y))
+    dx = max(max(-x, x + img.width - ref.width, 0) for img, x, y in placed)
+    dy = max(max(-y, y + img.height - ref.height, 0) for img, x, y in placed)
+    frames = []
+    for img, x, y in placed:
+        f = Image.new("RGBA", (ref.width + 2 * dx, ref.height + 2 * dy))
+        f.paste(img, (x + dx, y + dy))
+        frames.append(f)
+    return frames
 
 
 def step_cycle(img, floats=False):
-    """Four frames of movement from one sprite, for the game's frame cycling.
+    """Four frames of movement derived from one sprite: the fallback when it has no pose frames.
 
     A walker steps: neutral, front foot up, neutral, back foot up. On a step the body dips one
     pixel and the legs shorten by a row, and the lifted foot's half of the legs rises a pixel.
@@ -213,7 +258,7 @@ def enemy_height(eid):
 def main():
     g = json.loads((ROOT / "gamedata.json").read_text())
     picks = json.loads((HERE / "picks.json").read_text()) if (HERE / "picks.json").exists() else {}
-    cache = {}
+    cache, body = {}, {}
 
     def sprite(tid, h, box=False):
         """One frame at height h; box=True also caps the width at h (icons, projectiles)."""
@@ -231,18 +276,31 @@ def main():
 
     def moving(tid, h):
         if (tid, h, "cycle") not in cache:
-            img = sprite(tid, h)[0]
+            img, k = sprite(tid, h)[0], 1
             if img.height * 2 <= h:  # a coarse render: whole-number enlarge to its tier
                 k = h // img.height
                 img = img.resize((img.width * k, img.height * k), Image.NEAREST)
-            cache[tid, h, "cycle"] = step_cycle(img, tid in FLOATERS)
+            src = RAW / f"{tid}_s{picks.get(tid, 90)}.png"
+            shots = [src.with_name(f"{src.stem}_{p}.png") for p in "abc"]
+            move = MOVE_OF.get(tid, "walk")
+            if all(s.exists() for s in shots):
+                poses = [pixelize_pose(s, src, h) for s in shots]
+                if k > 1:
+                    poses = [p.resize((p.width * k, p.height * k), Image.NEAREST) for p in poses]
+                poses = [img if n in BAD_POSES.get(tid, "") else p for n, p in zip("abc", poses)]
+                cache[tid, h, "cycle"] = pose_cycle(img, poses, move)
+            else:
+                cache[tid, h, "cycle"] = step_cycle(img, move in ("fly", "float"))
+            body[tid, h] = img.size
         return cache[tid, h, "cycle"]
 
-    items = {}
+    items, sizes = {}, {}
     for cid, tid in HEROES.items():
         items[f"char:{cid}"] = moving(tid, 40)
+        sizes[f"char:{cid}"] = body[tid, 40]
     for eid in list(g["enemies"]) + ["reaper"]:
         items[f"enemy:{eid}"] = moving(family(eid), enemy_height(eid))
+        sizes[f"enemy:{eid}"] = body[family(eid), enemy_height(eid)]
     for k, tid in PICKUPS.items():
         items[f"pickup:{k}"] = sprite(tid, PICKUP_H.get(k, 14))
     for k, tid in LIGHTS.items():
@@ -283,11 +341,12 @@ def main():
         sil.paste((238, 238, 238), (0, 0), opaque)
         sil.save(OUT / f"page_{i}_s.png")
     # palette slots 22+ carry the neon extension; base colours already live in 0-15
-    (OUT / "atlas.json").write_text(json.dumps({"palette": NEON, "sprites": index}))
+    # "body": the size of the character inside frames that are padded for movement
+    (OUT / "atlas.json").write_text(json.dumps({"palette": NEON, "sprites": index, "body": sizes}))
     fams = {}
     for eid in g["enemies"]:
         fams[family(eid)] = fams.get(family(eid), 0) + 1
-    print(f"{len(index)} keys, {len(cache)} distinct sprites, {len(pages)} pages")
+    print(f"{len(index)} keys, {len(frames)} distinct frames, {len(pages)} pages")
     print("enemy families:", dict(sorted(fams.items(), key=lambda x: -x[1])))
 
 

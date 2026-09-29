@@ -126,9 +126,14 @@ icons and projectiles, passive icons and Arcana cards. It also renames the cast,
 items (`themes/nineties/names.json`: the Whip is a Slap Bracelet, the King Bible a circle of
 candy rings in six colours) and restyles the terrain (`terrain90s.py`). Every VS enemy id
 maps to a monster design, by name (`CAST` in `build_theme.py`) or by keyword family; big
-variants and bosses are re-pixelized larger from the same render. Characters and enemies move on
-a four-frame cycle derived from their one picked sprite. Weapon effects that are drawn in code (slashes, bolts, flames, lightning) are
-shared by all art modes.
+variants and bosses are re-pixelized larger from the same render.
+
+Movement is four frames per design: the picked sprite and three re-posed frames of it (a stride,
+a raised knee and a second stride for walkers; wing beats, a drift or a squash and stretch for
+the rest). `pose.py` draws them with the Krea 2 identity-edit workflow, using the picked sprite
+as its reference so the character stays the same, and `build_theme.py` matches their colours
+and lines them up on the feet. Weapon effects have 90s versions too, drawn in code by
+`fx90s.py`.
 
 The sprites were generated locally with ComfyUI and packed into `themes/nineties/`:
 
@@ -136,6 +141,7 @@ The sprites were generated locally with ComfyUI and packed into `themes/nineties
 uv run tools/sprite_gen/gen.py tools/sprite_gen/theme90s_prompts.json --arm qpixel=0.5 --seed 90 --seed 91
 uv run --with pillow --with numpy tools/sprite_gen/picksheet.py tools/sprite_gen/raw/picks.png mon_
 uv run --with pillow --with numpy tools/sprite_gen/picksheet.py tools/sprite_gen/raw/icons.png --box 16 wp_ pa_
+uv run tools/sprite_gen/pose.py --cast --missing                    # movement frames of the picks
 uv run --with pillow --with numpy tools/sprite_gen/build_theme.py   # picks.json -> themes/nineties/
 ```
 
@@ -169,6 +175,7 @@ uv run tools/build_gamedata.py         # classic-core selection -> gamedata.json
 | `arcanas.py` | 22 Arcana effects via hooks |
 | `art.py` | 90s theme atlas vs pixel-art renderer |
 | `terrain90s.py` | 90s theme stage terrain (arcade, sewer, rooftop, mall, CRT grid) |
+| `fx90s.py` | 90s theme weapon effects (bracelet snap, laser dot, soda fizz, plasma arcs...) |
 | `data.py` | loads `gamedata.json`, engine constants, evolution table |
 | `sprites.py`, `icons.py` | generated pixel art |
 | `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas, display names and the ComfyUI generation pipeline |

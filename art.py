@@ -26,6 +26,7 @@ PIXEL_SCALE = 2
 MODE = "pixel"
 _pages, _sil, _index = [], [], {}
 _names = {}  # themed display text from the atlas set's optional names.json
+_body = {}  # key -> (w, h) of the character, where frames are padded for movement
 
 # Pixel-art stand-ins for wiki enemies, chosen by keywords in the enemy id.
 _ENEMY_FALLBACK = [
@@ -52,8 +53,8 @@ def init(prefer="wiki"):
     "wiki" falls back to the 90s theme when the local wiki atlas is missing
     (every public clone and the web build), then to pixel art.
     """
-    global MODE, _index, _names
-    MODE, _index, _names = "pixel", {}, {}
+    global MODE, _index, _names, _body
+    MODE, _index, _names, _body = "pixel", {}, {}, {}
     _pages.clear()
     _sil.clear()
     if prefer == "wiki" and "wiki" not in available():
@@ -71,6 +72,7 @@ def init(prefer="wiki"):
         _pages.append(pyxel.Image.from_image(str(root / f"page_{i}.png")))
         _sil.append(pyxel.Image.from_image(str(root / f"page_{i}_s.png")))
     _index = atlas["sprites"]
+    _body = atlas.get("body", {})
     if (root / "names.json").exists():
         _names = json.loads((root / "names.json").read_text())
     MODE = prefer
@@ -93,6 +95,8 @@ def has(key):
 
 def size(key):
     """(w, h) of a sprite in screen pixels, or None."""
+    if key in _body:
+        return tuple(_body[key])
     if has(key):
         r = _index[key][0]
         return r[3], r[4]

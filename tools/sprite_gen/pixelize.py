@@ -103,15 +103,42 @@ def native(src):
     return cells, per
 
 
-def pixelize(src, height):
-    rgb, _ = native(src)
+def subject(src):
+    """The render's own pixels cropped to the subject: (rgb, mask, cell size in source px)."""
+    rgb, per = native(src)
     mask = key_mask(rgb)
     ys, xs = np.nonzero(mask)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
-    rgb, mask = rgb[y0:y1, x0:x1], mask[y0:y1, x0:x1]
+    return rgb[y0:y1, x0:x1], mask[y0:y1, x0:x1], per
+
+
+def pixelize(src, height):
+    rgb, mask, _ = subject(src)
+    return shrink(rgb, mask, min(height, mask.shape[0]))  # never upscale, only cap the height
+
+
+def pixelize_pose(src, ref, height):
+    """A re-posed frame of the character in `ref`, at the scale pixelize(ref, height) gives it.
+
+    The edit model renders a little brighter than its source, which would snap to other
+    palette colours and flicker, so the frame's colours are first matched to the reference's
+    (mean and spread per channel, over the subject only).
+    """
+    rgb, mask, per = subject(src)
+    rrgb, rmask, rper = subject(ref)
+    a, b = rgb[mask], rrgb[rmask]
+    rgb = np.clip((rgb - a.mean(0)) * (b.std(0) / np.maximum(a.std(0), 1)) + b.mean(0), 0, 255)
+    scale = min(height, rmask.shape[0]) / (rmask.shape[0] * rper)  # sprite px per source px
+    th = max(1, round(mask.shape[0] * per * scale))
+    img = shrink(rgb, mask, min(th, mask.shape[0]))
+    if th > img.height:  # a coarser render than the reference: enlarge to the same scale
+        img = img.resize((max(1, round(img.width * th / img.height)), th), Image.NEAREST)
+    return img
+
+
+def shrink(rgb, mask, th):
     idx = np.where(mask, snap(rgb), -1)  # -1 = transparent
     h, w = idx.shape
-    th = min(height, h)  # never upscale; only shrink sprites taller than the cap
     tw = max(1, round(w * th / h))
     out = np.full((th, tw), -1)
     for ty in range(th):

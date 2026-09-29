@@ -492,13 +492,13 @@ def aura(w, g):
             return True
         soul = k == "soul"
         a, b = (PURPLE, PINK) if soul else (GREEN, LIME)
-        pyxel.dither(0.14)
+        pyxel.dither(0.08)  # faint: the horde has to stay readable through it
         pyxel.circ(p.x, p.y, r, a)
         pyxel.dither(1.0)
         for j in range(10):  # puffs drifting round the edge of the cloud
             ang = j * TAU / 10 + g.frame * 0.03
             pr_ = r * (0.92 + 0.08 * math.sin(g.frame * 0.15 + j))
-            pyxel.dither(0.45)
+            pyxel.dither(0.3)
             pyxel.circ(p.x + math.cos(ang) * pr_, p.y + math.sin(ang) * pr_, 4 + j % 3, a)
             pyxel.dither(1.0)
         for j in range(5):  # wavy stink lines rising
