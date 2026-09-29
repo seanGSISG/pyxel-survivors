@@ -1,0 +1,5 @@
+# Scraped wiki mirror: regenerate with tools/scrape_wiki.py.
+# wiki/sprites holds poncle's copyrighted art: personal local use only, never commit.
+wiki/
+__pycache__/
+*.pyc
