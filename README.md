@@ -6,6 +6,7 @@ scraped from the official VS wiki (vampire.survivors.wiki).
 ```bash
 uv run --with pyxel python main.py          # real VS sprites if wiki/atlas exists
 uv run --with pyxel python main.py --pixel  # generated 16-colour pixel art
+uv run --with pyxel python main.py --theme 90s  # original 90s-nostalgia sprite theme
 ```
 
 Move with arrows / WASD / left stick. Weapons fire on their own. Pause with ESC / P.
@@ -38,6 +39,30 @@ uv run --with pillow tools/build_atlas.py  # native-size sprites, shared palette
 `wiki/` is gitignored: the sprites are poncle's copyrighted art, fine for a local personal
 clone but not for redistribution. Without `wiki/atlas` the game uses its own pixel art.
 
+## 90s theme
+
+`--theme 90s` swaps the characters, enemies, pickups and light sources for an original
+90s-nostalgia set: four teen mutant reptile heroes (Snapjaw, Dash, Boxer, Chomp), twenty
+90s kids (skater, grunge rocker, mall rat, pizza guy, raver...) and twenty monster families
+(pizza bats, skate skeletons, VHS ghosts, CRT heads, tape mummies, aerobics witches,
+chattering teeth, a video-store reaper...). Every VS enemy id maps to a family by keyword;
+big variants and bosses are re-pixelized larger from the same render. Weapon icons,
+projectiles, Arcana cards and terrain still use the pixel-art fallbacks.
+
+The sprites are generated locally with ComfyUI and packed into `themes/nineties/` (same
+format as the wiki atlas):
+
+```bash
+uv run tools/sprite_gen/gen.py tools/sprite_gen/theme90s_prompts.json --arm qpixel=0.5 --seed 90 --seed 91
+uv run --with pillow --with numpy tools/sprite_gen/picksheet.py tools/sprite_gen/raw/picks.png mon_
+uv run --with pillow --with numpy tools/sprite_gen/build_theme.py   # picks.json -> themes/nineties/
+```
+
+`workflow_api.json` is the ComfyUI graph: stock Krea 2 turbo with the QPixel V2 LoRA at 0.5,
+1024px renders on a flat magenta background. `pixelize.py` keys out the background, samples
+the render's own pixel grid (about 40 px tall) and snaps it to the theme palette (Pyxel's 16
++ 16 neon colours). `compare.py` builds the one-variable style comparison sheets.
+
 ## Layout
 
 | File | Role |
@@ -46,9 +71,10 @@ clone but not for redistribution. Without `wiki/atlas` the game uses its own pix
 | `world.py` | simulation: stats, waves, events, combat, pickups, level-ups, chests |
 | `weapons.py` | 50 weapon behaviours (update/draw per kind) |
 | `arcanas.py` | 22 Arcana effects via hooks |
-| `art.py` | wiki atlas vs pixel-art renderer |
+| `art.py` | atlas (wiki / 90s theme) vs pixel-art renderer |
 | `data.py` | loads `gamedata.json`, engine constants, evolution table |
 | `sprites.py`, `icons.py` | generated pixel art |
+| `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas and its ComfyUI generation pipeline |
 | `tools/weapon_lab.py` | standalone arena for eyeballing weapons |
 | `scenarios/` | headless test entry points (autopilot runs, full 30-min runs per stage, weapon lab, Arcanas) |
 
@@ -68,6 +94,8 @@ headlessly with the pyxel MCP `run` tool.
 ## Credits & licensing
 
 - **Code** (`*.py`, `tools/`, `scenarios/`): MIT, see [LICENSE](LICENSE).
+- **90s theme art** (`themes/nineties/`): original designs generated for this project with
+  Krea 2 and the QPixel LoRA; it contains no VS or third-party character art. MIT like the code.
 - **`gamedata.json`** is derived from the [Vampire Survivors Wiki](https://vampire.survivors.wiki)
   (stats, level text, wave tables, descriptions) and is licensed
   [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) like its source.

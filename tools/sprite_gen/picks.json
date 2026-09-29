@@ -1,0 +1,8 @@
+{
+  "_note": "seed per theme id when not 90 (see picksheet.py)",
+  "char_action": 91, "char_skelejock": 91, "char_grunge": 91,
+  "mon_arcade_mimic": 91, "mon_bull_biker": 91, "mon_figure_trooper": 91, "mon_late_fee": 91,
+  "mon_sewer_gator": 91, "mon_slime_jelly": 91, "mon_slinky_snake": 91, "mon_toxic_ooze": 91,
+  "mon_vhs_ghost": 91,
+  "pk_clock": 91, "pk_nduja": 91, "pk_chest_arcana": 91, "pk_richbag": 91, "lt_lavalamp": 91
+}

@@ -5,6 +5,7 @@ Survive 30 minutes on one of five stages until the Reaper comes.
 
     uv run --with pyxel python main.py          # real sprites if wiki/atlas exists
     uv run --with pyxel python main.py --pixel  # force the generated pixel art
+    uv run --with pyxel python main.py --theme 90s  # original 90s sprite theme
 """
 
 import math
@@ -979,4 +980,7 @@ class App(World):
 
 
 if __name__ == "__main__":
-    App({"art": "pixel"} if "--pixel" in sys.argv else None)
+    if "--theme" in sys.argv:
+        App({"art": sys.argv[sys.argv.index("--theme") + 1]})
+    else:
+        App({"art": "pixel"} if "--pixel" in sys.argv else None)

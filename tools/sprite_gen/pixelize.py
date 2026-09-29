@@ -21,15 +21,18 @@ NEON = ["2E5A1C", "5E8C31", "9BC53D", "6B3E26", "B0703A", "FF2BD6", "00F0E0", "9
 PALETTE = np.array([[int(c[i:i + 2], 16) for i in (0, 2, 4)] for c in BASE + NEON], float)
 
 
-def key_mask(rgb, tol=70):
+def key_mask(rgb, tol=70, hole_tol=30):
     """True where the pixel is subject.
 
     Background is whatever connects to the border and sits within `tol` of the
     border's median colour, so a pink pog enclosed by its outline survives.
+    Enclosed pockets (between arm and body) count as background only when they
+    are a near-exact match (`hole_tol`), which spares deliberate pinks.
     """
     h, w, _ = rgb.shape
     border = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]])
-    near = np.sqrt(((rgb - np.median(border, 0)) ** 2).sum(-1)) < tol
+    dist = np.sqrt(((rgb - np.median(border, 0)) ** 2).sum(-1))
+    near = dist < tol
     bg = np.zeros((h, w), bool)
     stack = [(y, x) for y in range(h) for x in (0, w - 1)] + [(y, x) for x in range(w) for y in (0, h - 1)]
     while stack:
@@ -37,7 +40,7 @@ def key_mask(rgb, tol=70):
         if 0 <= y < h and 0 <= x < w and near[y, x] and not bg[y, x]:
             bg[y, x] = True
             stack += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
-    return ~bg
+    return ~(bg | (dist < hole_tol))
 
 
 def snap(rgb):
@@ -46,40 +49,52 @@ def snap(rgb):
     return d.argmin(-1)
 
 
-def grid(rgb, axis):
-    """(period, phase) of the render's own pixel grid along one axis.
-
-    Colour steps between neighbouring columns (or rows) pile up on the cell
-    borders, so the step profile is periodic; autocorrelation finds the period
-    and the best-aligned comb finds the phase.
-    """
+def _steps(rgb, axis):
+    """Colour-step profile across one axis; it peaks on the cell borders."""
     step = np.abs(np.diff(rgb, axis=axis)).sum(-1).sum(1 - axis)
-    step = step - step.mean()
+    return step - step.mean()
+
+
+def period(step, lo=8, hi=80):
+    """Fundamental period of a step profile.
+
+    The first autocorrelation peak within 60% of the strongest wins: sparse
+    sprites often correlate best at a multiple of the cell (48, 64 for 16).
+    """
     ac = np.correlate(step, step, "full")[len(step) - 1:]
-    lo = 8
-    p = lo + int(ac[lo:80].argmax())
-    # refine to a fractional period with a parabola through the peak
-    a, b, c = ac[p - 1], ac[p], ac[p + 1]
-    period = p + 0.5 * (a - c) / (a - 2 * b + c) if a - 2 * b + c else p
+    top = ac[lo:hi].max()
+    p = next(i for i in range(lo, hi) if ac[i] >= 0.6 * top and ac[i] >= ac[i - 1] and ac[i] >= ac[i + 1])
+    a, b, c = ac[p - 1], ac[p], ac[p + 1]  # parabola through the peak refines it
+    return p + 0.5 * (a - c) / (a - 2 * b + c) if a - 2 * b + c else p
+
+
+def phase(step, per):
+    """Offset of the best-aligned comb of cell borders."""
     n = len(step)
-    phases = np.arange(0, period, 0.5)
-    score = [step[np.clip(np.round(np.arange(ph, n, period)).astype(int), 0, n - 1)].sum() for ph in phases]
-    return period, phases[int(np.argmax(score))] + 1
+    phases = np.arange(0, per, 0.5)
+    score = [step[np.clip(np.round(np.arange(ph, n, per)).astype(int), 0, n - 1)].sum() for ph in phases]
+    return phases[int(np.argmax(score))] + 1
 
 
 def native(src):
-    """Sample one colour per detected grid cell: the render at its own resolution."""
+    """Sample one colour per detected grid cell: the render at its own resolution.
+
+    Cells are square, so one period (the finer of the two axes) serves both;
+    each axis keeps its own phase.
+    """
     rgb = np.asarray(Image.open(src).convert("RGB"), float)
-    (px, ox), (py, oy) = grid(rgb, 1), grid(rgb, 0)
-    xs = np.arange(ox + px / 2 - px, rgb.shape[1], px)
-    ys = np.arange(oy + py / 2 - py, rgb.shape[0], py)
+    sx, sy = _steps(rgb, 1), _steps(rgb, 0)
+    per = min(period(sx), period(sy))
+    ox, oy = phase(sx, per), phase(sy, per)
+    xs = np.arange(ox + per / 2 - per, rgb.shape[1], per)
+    ys = np.arange(oy + per / 2 - per, rgb.shape[0], per)
     xs = xs[(xs >= 0) & (xs < rgb.shape[1])].astype(int)
     ys = ys[(ys >= 0) & (ys < rgb.shape[0])].astype(int)
     # median of the cell's central quarter resists anti-aliased borders
-    r = max(1, int(min(px, py) / 4))
+    r = max(1, int(per / 4))
     cells = np.array([[np.median(rgb[max(0, y - r):y + r + 1, max(0, x - r):x + r + 1].reshape(-1, 3), 0)
                        for x in xs] for y in ys])
-    return cells, (px, py)
+    return cells, per
 
 
 def pixelize(src, height):

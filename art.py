@@ -1,10 +1,12 @@
-"""Sprite rendering with two interchangeable art sets.
+"""Sprite rendering with interchangeable art sets.
 
 "wiki":  the real Vampire Survivors sprites, packed by tools/build_atlas.py
          into wiki/atlas (personal local use; never committed).
+"90s":   original generated 90s-theme sprites, packed by tools/sprite_gen/
+         build_theme.py into themes/nineties (same atlas format, committed).
 "pixel": the code-generated 16-colour art in sprites.py / icons.py (2x scale).
 
-The wiki set is used when its atlas exists, unless the config asks for pixel.
+The wiki set is used when its atlas exists, unless the config asks otherwise.
 Every draw call is centred on (x, y) and falls back to pixel art per key.
 """
 
@@ -17,6 +19,7 @@ import icons
 import sprites
 
 ATLAS = pathlib.Path(__file__).parent / "wiki" / "atlas"
+ATLASES = {"wiki": ATLAS, "90s": pathlib.Path(__file__).parent / "themes" / "nineties"}
 KEYCOL = 21  # palette index reserved as the atlas transparency key
 PIXEL_SCALE = 2
 
@@ -40,25 +43,28 @@ _ENEMY_FALLBACK = [
 def init(prefer="wiki"):
     """Load the atlas into the palette/images if available. Returns the mode."""
     global MODE, _index
-    MODE = "pixel"
-    meta = ATLAS / "atlas.json"
-    if prefer != "wiki" or not meta.exists():
+    MODE, _index = "pixel", {}
+    _pages.clear()
+    _sil.clear()
+    root = ATLASES.get(prefer)
+    if not root or not (root / "atlas.json").exists():
         return MODE
+    meta = root / "atlas.json"
     atlas = json.loads(meta.read_text())
     while len(pyxel.colors) < KEYCOL:
         pyxel.colors.append(0)
     pyxel.colors[KEYCOL:] = [0xFF00FF] + [int(c, 16) for c in atlas["palette"]]
     n = 1 + max(r[0] for rects in atlas["sprites"].values() for r in rects)
     for i in range(n):
-        _pages.append(pyxel.Image.from_image(str(ATLAS / f"page_{i}.png")))
-        _sil.append(pyxel.Image.from_image(str(ATLAS / f"page_{i}_s.png")))
+        _pages.append(pyxel.Image.from_image(str(root / f"page_{i}.png")))
+        _sil.append(pyxel.Image.from_image(str(root / f"page_{i}_s.png")))
     _index = atlas["sprites"]
-    MODE = "wiki"
+    MODE = prefer
     return MODE
 
 
 def has(key):
-    return MODE == "wiki" and key in _index
+    return key in _index
 
 
 def size(key):

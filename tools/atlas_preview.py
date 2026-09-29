@@ -22,7 +22,7 @@ class Preview:
         pyxel.colors.extend([0x1E3D22, 0x26502A, 0x33662F, 0x173019, 0x4A7A3A])
         sprites.load()
         icons.load()
-        print("mode:", art.init())
+        print("mode:", art.init(os.environ.get("ART", "wiki")))
         # one screen per group, advancing every 10 frames
         self.pages = [[k for k in art._index if k.split(":")[0] == g] for g in GROUPS]
         pyxel.run(self.update, self.draw)
