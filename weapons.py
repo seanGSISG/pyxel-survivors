@@ -20,6 +20,19 @@ def sec(s):
     return max(1, int(round(s * FPS)))
 
 
+# weapon id -> behaviour kind (update/draw functions below)
+KIND = {
+    "whip": "whip", "magic_wand": "wand", "knife": "knife", "axe": "axe", "cross": "cross",
+    "king_bible": "bible", "fire_wand": "fire", "garlic": "garlic", "santa_water": "water",
+    "lightning_ring": "ring", "runetracer": "rune", "bloody_tear": "tear", "holy_wand": "holy",
+    "thousand_edge": "edge", "death_spiral": "spiral", "heaven_sword": "heaven",
+    "unholy_vespers": "vespers", "hellfire": "hellfire", "soul_eater": "soul",
+    "la_borra": "borra", "thunder_loop": "thunder", "no_future": "nofuture",
+}
+# kinds that release a whole volley at once instead of one shot per interval
+VOLLEY = {"bible", "vespers", "fire", "hellfire", "spiral"}
+
+
 class Weapon:
     def __init__(self, wid):
         self.id = wid
@@ -38,8 +51,16 @@ class Weapon:
         return data.WEAPONS[self.id]
 
     @property
+    def kind(self):
+        return KIND.get(self.id, "wand")
+
+    @property
+    def burst(self):
+        return 0 if self.kind in VOLLEY else max(1, round(self.spec["base"]["interval"] * FPS))
+
+    @property
     def maxed(self):
-        return self.level >= len(self.spec["levels"]) + 1
+        return self.level >= self.spec["max_level"]
 
     def stats(self, ps):
         """Final stats after levels and passive multipliers."""
@@ -58,7 +79,7 @@ class Weapon:
 
     def update(self, g):
         st = self.stats(g.pstats)
-        kind = self.spec["kind"]
+        kind = self.kind
         if kind in ("garlic", "soul"):
             aura_update(self, g, st)
             return
@@ -74,12 +95,12 @@ class Weapon:
                 n = st["amount"]
                 spawn(self, g, st, n - self.queue, n)
                 self.queue -= 1
-                self.burst_t = self.spec.get("burst", 3)
+                self.burst_t = self.burst
             return
         self.timer -= 1
         if self.timer <= 0:
             self.volley += 1
-            if self.spec.get("burst", 3) == 0:
+            if self.burst == 0:
                 for i in range(st["amount"]):
                     spawn(self, g, st, i, st["amount"])
             else:
@@ -152,7 +173,7 @@ def crit(g, w, dmg, chance):
 
 def spawn(w, g, st, i, n):
     p = g.p
-    kind = w.spec["kind"]
+    kind = w.kind
     dmg = st["dmg"]
     if kind in ("whip", "tear"):
         side = p.face_x if i % 2 == 0 else -p.face_x
@@ -189,13 +210,12 @@ def spawn(w, g, st, i, n):
                   7 * st["area"], 1.0)
         g.projs.append(pr)
     elif kind == "spiral":
-        for k in range(9):
-            ang = w.volley * 0.35 + k * math.tau / 9
-            pr = Proj(kind, w, p.x, p.y, math.cos(ang) * 2.4 * st["speed"],
-                      math.sin(ang) * 2.4 * st["speed"], dmg, sec(2.5),
-                      999, 9 * st["area"], 1.0)
-            pr.a = ang
-            g.projs.append(pr)
+        ang = w.volley * 0.35 + i * math.tau / n
+        pr = Proj(kind, w, p.x, p.y, math.cos(ang) * 2.4 * st["speed"],
+                  math.sin(ang) * 2.4 * st["speed"], dmg, sec(2.5),
+                  999, 9 * st["area"], 1.0)
+        pr.a = ang
+        g.projs.append(pr)
     elif kind in ("cross", "heaven"):
         targets = g.nearest_enemies(p.x, p.y, max(1, n))
         if targets:
