@@ -76,13 +76,12 @@ Weapons fire on their own. Your job is to move, choose upgrades, and stay alive 
 Every stage runs its real minute-by-minute wave table: enemy variants, spawn minimums and
 intervals, bosses, swarms, walls and stalkers.
 
-## Three art styles
+## Two art styles
 
 | Command | Look |
 |---|---|
 | `uv run --with pyxel python main.py --theme 90s` | **90s theme** (shown above): original sprites generated for this project |
 | `uv run --with pyxel python main.py --pixel` | **Pixel mode**: hand-coded 16-colour art that ships in the source (below) |
-| `uv run --with pyxel python main.py` | **Wiki sprites**: the real VS art, if you build the local atlas yourself (see Data pipeline below) |
 
 <div align="center">
 <img src="docs/media/pixel_mode.gif" alt="Pixel-art mode on Gallo Tower" width="70%">
@@ -108,8 +107,7 @@ projectiles, Arcana cards and terrain still use pixel mode. Every VS enemy id ma
 monster family by keyword; big variants and bosses are re-pixelized larger from the same
 render.
 
-The sprites were generated locally with ComfyUI and packed into `themes/nineties/`, which
-uses the same atlas format as the wiki sprites:
+The sprites were generated locally with ComfyUI and packed into `themes/nineties/`:
 
 ```bash
 uv run tools/sprite_gen/gen.py tools/sprite_gen/theme90s_prompts.json --arm qpixel=0.5 --seed 90 --seed 91
@@ -130,15 +128,9 @@ uv run --with pillow --with numpy tools/sprite_gen/build_theme.py   # picks.json
 
 ```bash
 uv run tools/scrape_wiki.py            # wikitext for ~1,850 pages -> wiki/raw/
-uv run tools/scrape_wiki.py --sprites  # ~2,950 sprite/icon files -> wiki/sprites/
 uv run tools/parse_wiki.py             # infoboxes, level tables, waves -> wiki/data/*.json
 uv run tools/build_gamedata.py         # classic-core selection -> gamedata.json (committed)
-uv run --with pillow tools/build_atlas.py  # native-size sprites, shared palette -> wiki/atlas/
 ```
-
-`wiki/` is gitignored because the sprites are poncle's copyrighted art: fine for a local
-personal clone, not for redistribution. Without `wiki/atlas` the game falls back to its own
-art.
 
 </details>
 
@@ -151,7 +143,7 @@ art.
 | `world.py` | simulation: stats, waves, events, combat, pickups, level-ups, chests |
 | `weapons.py` | 50 weapon behaviours (update/draw per kind) |
 | `arcanas.py` | 22 Arcana effects via hooks |
-| `art.py` | atlas (wiki / 90s theme) vs pixel-art renderer |
+| `art.py` | 90s theme atlas vs pixel-art renderer |
 | `data.py` | loads `gamedata.json`, engine constants, evolution table |
 | `sprites.py`, `icons.py` | generated pixel art |
 | `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas and its ComfyUI generation pipeline |
@@ -180,15 +172,12 @@ headlessly with the pyxel MCP `run` tool, which also recorded every GIF on this 
 
 - **Code** (`*.py`, `tools/`, `scenarios/`): MIT, see [LICENSE](LICENSE).
 - **90s theme art** (`themes/nineties/`) and the README media (`docs/media/`): original
-  designs generated for this project with Krea 2 and the QPixel LoRA, containing no VS or
-  third-party character art. MIT like the code.
+  designs generated for this project with Krea 2 and the QPixel LoRA. MIT like the code.
 - **`gamedata.json`** is derived from the [Vampire Survivors Wiki](https://vampire.survivors.wiki)
   (stats, level text, wave tables, descriptions) and is licensed
   [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) like its source.
   Credit goes to the wiki's contributors. Regenerate it with the tools above.
 - *Vampire Survivors* and all its names and characters are trademarks of poncle. This is an
   unofficial, non-commercial fan project with no affiliation to or endorsement from poncle.
-  No VS game art is included: the scraper downloads sprites into the gitignored `wiki/`
-  folder for local personal use only.
 
 <div align="center"><sub>If this made you smile, a ⭐ helps other people find it.</sub></div>
