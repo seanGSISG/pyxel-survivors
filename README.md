@@ -13,23 +13,32 @@ and driven by real game data.
 [![uv](https://img.shields.io/badge/runs%20with-uv-DE5FE9)](https://docs.astral.sh/uv/)
 [![License: MIT](https://img.shields.io/badge/code-MIT-00F0E0)](LICENSE)
 
+### [▶ Play in your browser](https://seangsisg.github.io/pyxel-survivors/)
+
+<sub>No install. Runs right in the page (Python compiled to WebAssembly). Click to start, then press Enter.</sub>
+
 <img src="docs/media/gameplay.gif" alt="Minute 15: an evolved build shredding pizza bats, toxic ooze and sewer rats" width="100%">
 
 <sub><i>Real, unedited game footage. Minute 15 of Mad Forest, six evolved weapons, Snapjaw vs. the pizza-bat horde.</i></sub>
 
 </div>
 
-## Play it in 30 seconds
+## Play it
 
-You only need [uv](https://docs.astral.sh/uv/getting-started/installation/). It fetches Python and Pyxel for you.
+**In your browser:** [seangsisg.github.io/pyxel-survivors](https://seangsisg.github.io/pyxel-survivors/). It works on desktop with a
+keyboard or gamepad. Rebuilt automatically on every push to `main`.
+
+**On your machine, in 30 seconds:** you only need [uv](https://docs.astral.sh/uv/getting-started/installation/),
+which fetches Python and Pyxel for you.
 
 ```bash
 git clone https://github.com/seanGSISG/pyxel-survivors.git
 cd pyxel-survivors
-uv run --with pyxel python main.py --theme 90s
+uv run --with pyxel python main.py
 ```
 
-No uv? `pip install pyxel` and then `python main.py --theme 90s` works too.
+No uv? `pip install pyxel` and then `python main.py` works too. Press **T** on the title
+screen to switch between the 90s theme and pixel art.
 
 | Move | Confirm | Back | Pause |
 |---|---|---|---|
@@ -80,7 +89,7 @@ intervals, bosses, swarms, walls and stalkers.
 
 | Command | Look |
 |---|---|
-| `uv run --with pyxel python main.py --theme 90s` | **90s theme** (shown above): original sprites generated for this project |
+| `uv run --with pyxel python main.py` (default) | **90s theme** (shown above): original sprites generated for this project |
 | `uv run --with pyxel python main.py --pixel` | **Pixel mode**: hand-coded 16-colour art that ships in the source (below) |
 
 <div align="center">
@@ -148,6 +157,7 @@ uv run tools/build_gamedata.py         # classic-core selection -> gamedata.json
 | `sprites.py`, `icons.py` | generated pixel art |
 | `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas and its ComfyUI generation pipeline |
 | `tools/weapon_lab.py` | standalone arena for eyeballing weapons |
+| `tools/build_web.py` | browser build (Pyxel WASM) for GitHub Pages; `--bench` measures fps |
 | `scenarios/` | headless test entry points (autopilot runs, full 30-min runs per stage, weapon lab, Arcanas, README footage `show_*.py`) |
 
 Scenarios pass a config to `main.App`: `char`, `stage`, `arcanas`, `minute`, `god`,
