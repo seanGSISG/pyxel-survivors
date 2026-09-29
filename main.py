@@ -3,7 +3,7 @@
 Move with arrows / WASD / left stick; weapons fire on their own.
 Survive 30 minutes on one of five stages until the Reaper comes.
 
-    uv run --with pyxel python main.py          # real sprites if wiki/atlas exists
+    uv run --with pyxel python main.py          # wiki sprites if wiki/atlas exists, else 90s theme
     uv run --with pyxel python main.py --pixel  # force the generated pixel art
     uv run --with pyxel python main.py --theme 90s  # original 90s sprite theme
 """
@@ -43,6 +43,7 @@ RIGHT = (pyxel.KEY_RIGHT, pyxel.KEY_D, pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)
 OK = (pyxel.KEY_RETURN, pyxel.KEY_SPACE, pyxel.KEY_Z, pyxel.GAMEPAD1_BUTTON_A)
 BACK = (pyxel.KEY_ESCAPE, pyxel.KEY_X, pyxel.GAMEPAD1_BUTTON_B)
 PAUSE = (pyxel.KEY_ESCAPE, pyxel.KEY_P, pyxel.GAMEPAD1_BUTTON_START)
+ART = (pyxel.KEY_T, pyxel.GAMEPAD1_BUTTON_Y)  # title screen: cycle art sets
 
 
 def held(keys):
@@ -233,6 +234,11 @@ class App(World):
             b[1] += math.sin(self.frame * 0.05 + b[2] * 10) * 0.5
             if b[0] > W + 20:
                 b[0], b[1] = -20, random.uniform(0, H)
+        if pressed(ART):
+            modes = art.available()
+            nxt = modes[(modes.index(self.art_mode) + 1) % len(modes)] if self.art_mode in modes else modes[0]
+            self.art_mode = art.init(nxt)
+            self.sfx("move")
         if pressed(OK):
             self.sfx("ok")
             self.state = "select"
@@ -443,7 +449,7 @@ class App(World):
         if self.frame // 15 % 2:
             center_text(206, "PRESS ENTER", 10)
         center_text(232, "MOVE: ARROWS / WASD / STICK    WEAPONS FIRE ON THEIR OWN", 13)
-        center_text(242, f"PAUSE: ESC / P    SURVIVE 30 MINUTES    ART: {self.art_mode.upper()}", 5)
+        center_text(242, f"PAUSE: ESC / P    SURVIVE 30 MINUTES    ART: {self.art_mode.upper()} (T)", 5)
 
     def draw_select(self):
         pyxel.cls(0)

@@ -40,12 +40,23 @@ _ENEMY_FALLBACK = [
 ]
 
 
+def available():
+    """Art modes this install can load: atlas sets whose atlas exists, then pixel."""
+    return [m for m, root in ATLASES.items() if (root / "atlas.json").exists()] + ["pixel"]
+
+
 def init(prefer="wiki"):
-    """Load the atlas into the palette/images if available. Returns the mode."""
+    """Load the atlas into the palette/images if available. Returns the mode.
+
+    "wiki" falls back to the 90s theme when the local wiki atlas is missing
+    (every public clone and the web build), then to pixel art.
+    """
     global MODE, _index
     MODE, _index = "pixel", {}
     _pages.clear()
     _sil.clear()
+    if prefer == "wiki" and "wiki" not in available():
+        prefer = "90s"
     root = ATLASES.get(prefer)
     if not root or not (root / "atlas.json").exists():
         return MODE
