@@ -465,15 +465,15 @@ class App(World):
             pyxel.rect(x + 1, y, cw - 2, chh - 2, 1 if sel else 0)
             pyxel.rectb(x + 1, y, cw - 2, chh - 2, 10 if sel else 5)
             art.draw_char(ch["id"], x + cw / 2, y + 20, sel, self.frame, False)
-            name = art.label("characters", ch["id"], "alias", ch["alias"])[:13]
+            name = art.name("characters", ch, "alias")[:13]
             shadow_text(x + cw / 2 - text_w(name) / 2, y + chh - 10, name, 7 if sel else 13)
         ch = data.CHARACTERS[self.sel]
         y = 26 + 3 * chh + 4
         panel(20, y, W - 40, H - y - 18, 5, 0)
         if ch["weapons"]:
             art.icon(ch["weapons"][0], 36, y + 14)
-        shadow_text(52, y + 6, art.label("characters", ch["id"], "name", ch["name"]), 10)
-        wn = ", ".join(data.WEAPONS[w]["name"] for w in ch["weapons"] if w in data.WEAPONS)
+        shadow_text(52, y + 6, art.name("characters", ch), 10)
+        wn = ", ".join(art.name("weapons", data.WEAPONS[w]) for w in ch["weapons"] if w in data.WEAPONS)
         shadow_text(52, y + 16, f"{wn}   Max HP {ch['hp']}", 7)
         for k, line in enumerate(wrap(ch["desc"], 100)[:2]):
             shadow_text(32, y + 30 + k * 9, line, 11)
@@ -500,13 +500,13 @@ class App(World):
             boss = next((b for wv in st["waves"] for b in wv["bosses"]), None)
             if boss:
                 art.draw_enemy(boss, x + cw / 2 + 18, y + 44, self.frame, True)
-            name = art.label("stages", st["id"], "name", st["name"])
+            name = art.name("stages", st)
             shadow_text(x + cw / 2 - text_w(name) / 2, y + 72, name, 10 if sel else 7)
             lay = {"open": "Open field", "horizontal": "Corridor (L-R)",
                    "vertical": "Tower (up-down)"}[st["layout"]]
             shadow_text(x + cw / 2 - text_w(lay) / 2, y + 82, lay, 13)
             shadow_text(x + cw / 2 - text_w("30:00") / 2, y + 92, "30:00", 13)
-            desc = art.label("stages", sid, "desc", st["desc"])
+            desc = art.name("stages", st, "desc")
             for k, line in enumerate(wrap(desc, 20)[:5]):
                 shadow_text(x + 5, y + 104 + k * 8, line, 6 if sel else 5)
         st = data.STAGES[data.STAGE_ORDER[self.stage_sel]]
@@ -552,10 +552,10 @@ class App(World):
         self.draw_card(aid, 70, 110, big=True)
         if aid:
             a = data.ARCANAS[aid]
-            shadow_text(140, 120, a["name"], 10)
+            shadow_text(140, 120, art.name("arcanas", a), 10)
             for k, line in enumerate(wrap(a["desc"], 80)[:5]):
                 shadow_text(140, 132 + k * 9, line, 7)
-            aff = [data.WEAPONS[w]["name"] for w in a["affects"] if w in data.WEAPONS]
+            aff = [art.name("weapons", data.WEAPONS[w]) for w in a["affects"] if w in data.WEAPONS]
             if aff:
                 shadow_text(140, 184, "Affects:", 13)
                 for k, line in enumerate(wrap(", ".join(aff), 80)[:3]):
@@ -861,12 +861,12 @@ class App(World):
         y = 60
         for w in self.weapons:
             art.icon(w.id, 80, y + 3)
-            shadow_text(92, y, f"{w.spec['name']}  Lv {w.level}", 7)
+            shadow_text(92, y, f"{art.name('weapons', w.spec)}  Lv {w.level}", 7)
             y += 16
         y = 60
         for pid, lv in self.passives.items():
             art.icon(pid, 250, y + 3)
-            shadow_text(262, y, f"{data.PASSIVES[pid]['name']}  Lv {lv}", 7)
+            shadow_text(262, y, f"{art.name('passives', data.PASSIVES[pid])}  Lv {lv}", 7)
             y += 16
         for i, aid in enumerate(self.arc.active):
             self.draw_card(aid, 90 + i * 20, 170)
@@ -877,7 +877,7 @@ class App(World):
         center_text(206, f"Speed {ps['speed']:.0%}  Duration {ps['duration']:.0%}  "
                          f"Luck {ps['luck']:.0%}  Growth {ps['growth']:.0%}  "
                          f"Greed {ps['greed']:.0%}  Curse {ps['curse']:.0%}", 13)
-        center_text(228, f"{self.stage['name']}  -  {self.char['name']}", 11)
+        center_text(228, f"{art.name('stages', self.stage)}  -  {art.name('characters', self.char)}", 11)
         center_text(242, "ENTER/ESC resume     Q quit to title", 10)
 
     def draw_levelup(self):
@@ -934,12 +934,12 @@ class App(World):
             y = py + 26 + k * 18
             art.icon(i, px + 18, y + 4)
             if t_ == "evo":
-                name, col, tag = data.WEAPONS[i]["name"], 10, "EVOLVED!"
+                name, col, tag = art.name("weapons", data.WEAPONS[i]), 10, "EVOLVED!"
             elif t_ == "w":
                 w = self.weapon(i)
-                name, col, tag = data.WEAPONS[i]["name"], 7, f"Lv {w.level}" if w else ""
+                name, col, tag = art.name("weapons", data.WEAPONS[i]), 7, f"Lv {w.level}" if w else ""
             elif t_ == "p":
-                name, col, tag = data.PASSIVES[i]["name"], 7, f"Lv {self.passives.get(i, 0)}"
+                name, col, tag = art.name("passives", data.PASSIVES[i]), 7, f"Lv {self.passives.get(i, 0)}"
             else:
                 name, col, tag = "Gold +25", 10, ""
             shadow_text(px + 32, y + 1, name, col)
@@ -961,7 +961,7 @@ class App(World):
             self.draw_card(aid, x, 112, big=True)
         if n:
             ar = data.ARCANAS[a["options"][a["sel"]]]
-            center_text(184, ar["name"], 10)
+            center_text(184, art.name("arcanas", ar), 10)
             for k, line in enumerate(wrap(ar["desc"], 100)[:3]):
                 center_text(196 + k * 9, line, 7)
         center_text(H - 14, "LEFT/RIGHT choose   ENTER take", 13)
@@ -974,8 +974,7 @@ class App(World):
         center_text(16, "STAGE CLEAR" if cleared else "GAME OVER", 10 if cleared else 8, 3)
         if cleared:
             center_text(42, "You survived until the Reaper came.", 13)
-        rows = [("Stage", art.label("stages", self.stage["id"], "name", self.stage["name"])),
-                ("Character", art.label("characters", self.char["id"], "name", self.char["name"])),
+        rows = [("Stage", art.name("stages", self.stage)), ("Character", art.name("characters", self.char)),
                 ("Survived", mmss(self.t)), ("Level", str(self.level)),
                 ("Enemies defeated", str(self.kills)), ("Gold earned", str(self.gold))]
         for k, (a, b) in enumerate(rows):
@@ -989,7 +988,7 @@ class App(World):
         for k, w in enumerate(self.weapons):
             yy = y + 18 + k * 16
             art.icon(w.id, 78, yy + 3)
-            shadow_text(90, yy, w.spec["name"], 7)
+            shadow_text(90, yy, art.name("weapons", w.spec), 7)
             shadow_text(260, yy, str(w.level), 7)
             shadow_text(300, yy, str(int(w.dmg_done)), 7)
             shadow_text(360, yy, str(w.kills), 7)

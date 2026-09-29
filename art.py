@@ -82,6 +82,11 @@ def label(kind, key, field, default):
     return _names.get(kind, {}).get(key, {}).get(field, default)
 
 
+def name(kind, spec, field="name"):
+    """Themed display name (or other text field) of a gamedata spec."""
+    return label(kind, spec["id"], field, spec[field])
+
+
 def has(key):
     return key in _index
 

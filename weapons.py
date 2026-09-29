@@ -390,11 +390,11 @@ def face_dir(p):
     return fx / ln, fy / ln
 
 
-def spr(key, x, y, rotate=0.0, scale=1.0, flip=False):
-    """Real weapon sprite if the atlas has it."""
+def spr(key, x, y, rotate=0.0, scale=1.0, flip=False, frame=0):
+    """Real weapon sprite if the atlas has it; `frame` picks among its variants."""
     if not art.has(key):
         return False
-    u = art._index[key][0]
+    u = art._index[key][frame % len(art._index[key])]
     pyxel.blt(x - u[3] / 2, y - u[4] / 2, art._pages[u[0]], u[1], u[2],
               -u[3] if flip else u[3], u[4], art.KEYCOL, rotate, scale)
     return True
@@ -657,6 +657,7 @@ def sp_bible(w, g, st, i, n):
     pr = Proj(w.kind, w, p.x, p.y, dmg=st["dmg"], life=sec(st["dur"]), pierce=999,
               r=5 * PX * st["area"], kb=st["kb"], interval=sec(0.5))
     pr.a = i * TAU / n
+    pr.c = i  # place in the ring: themes with several sprite variants give each its own
     pr.extra = 38 * PX * st["area"]  # orbit radius
     pr.ox = st["speed"]
     add(g, pr)
@@ -1278,7 +1279,7 @@ def d_cross(pr, g):
 
 def d_bible(pr, g):
     key = "wspr:king_bible" if pr.kind == "bible" else "wspr:unholy_vespers"
-    if spr(key, pr.x, pr.y, scale=max(0.8, pr.r / (6 * PX))):
+    if spr(key, pr.x, pr.y, scale=max(0.8, pr.r / (6 * PX)), frame=pr.c):
         return
     if pr.kind == "vespers":
         pyxel.pal(12, 8)

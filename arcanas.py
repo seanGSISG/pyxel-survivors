@@ -11,6 +11,7 @@ on_hit/on_expire (no recursion) and don't count against weapon pools.
 import math
 import random
 
+import art
 import data
 import weapons
 
@@ -164,7 +165,7 @@ class Arcanas:
             self.orologion_mult = 2.0
         if aid in OSCILLATING or aid in (SINKING, AWAKE):
             g.recompute_stats()
-        g.show_banner(data.ARCANAS[aid]["name"].upper(), 45)
+        g.show_banner(art.name("arcanas", data.ARCANAS[aid]).upper(), 45)
 
     def update(self):
         """Per-frame effects: stat oscillation, Mad Groove, Blood Astronomia, pulses."""

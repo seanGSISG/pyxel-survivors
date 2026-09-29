@@ -8,6 +8,10 @@ page_N_s.png and atlas.json. Game keys are resolved here, at build time, so
 art.py loads this exactly like the wiki atlas: every enemy id points at its
 family's sprite, and big variants and bosses are re-pixelized larger from the
 same render rather than upscaled.
+
+Characters and enemies get a short movement cycle derived from their one picked
+sprite (see step_cycle), so the design is identical in every frame. Identical
+frames are packed once and shared by every key that uses them.
 """
 
 import json
@@ -76,9 +80,122 @@ LIGHTS = {"brazier": "lt_boombox", "candelabrone": "lt_lavalamp", "lampost": "lt
           "lantern": "lt_jukebox", "blue_brazier": "lt_bluelamp"}
 PICKUP_H = {"gem": 10, "gem_green": 12, "gem_red": 14, "coin": 10, "chest": 16,
             "chest_evo": 16, "chest_arcana": 16}
+# Weapons the game draws as sprites (weapons.py spr()), with the box each must fit: the draw
+# scales were tuned against sprites of these sizes.
+WSPR = {"knife": 28, "axe": 16, "death_spiral": 16, "cross": 16, "heaven_sword": 16,
+        "king_bible": 22, "unholy_vespers": 22, "runetracer": 12, "gatti_amari": 16,
+        "vicious_hunger": 28, "shadow_pinion": 16, "bone": 14, "cherry_bomb": 14, "carrello": 28,
+        "celestial_dusting": 16, "la_robba": 28, "peachone": 16, "ebony_wings": 16, "vandalier": 16}
+PASSIVES = {"clover": "pk_clover", "pummarola": "pk_juicebox"}  # everything else is pa_<id>
+CARD_H = 80  # Arcana card height on the pick screen
+# Candy colours, dark to light. The orbiting candy rings come in all of them: one frame per
+# colour, recoloured from the single picked render so the shape stays the same.
+CANDY = {
+    "blue": ["2B335F", "395C98", "19959C", "7696DE", "70C6A9", "A9C1FF"],
+    "red": ["7A0F2A", "C4122F", "C4122F", "D4186C", "FF9798", "FF9798"],
+    "green": ["2E5A1C", "5E8C31", "5E8C31", "9BC53D", "9BC53D", "F5E6C8"],
+    "grape": ["3D2C5E", "7E2072", "7E2072", "9D4EDD", "9D4EDD", "A9C1FF"],
+    "orange": ["6B3E26", "B0703A", "D38441", "FF7A1A", "E9C35B", "FFE14D"],
+    "lemon": ["B0703A", "D38441", "E9C35B", "E9C35B", "FFE14D", "F5E6C8"],
+}
+RINGS = {"king_bible": "blue", "unholy_vespers": "red"}  # weapon -> the colour it was rendered in
+
+
+def recolour(img, src, dst):
+    """Copy of img with each colour of the src ramp swapped for the same step of the dst ramp."""
+    rgb = [tuple(int(c[i:i + 2], 16) for i in (0, 2, 4)) for c in src + dst]
+    swap = dict(zip(rgb[:len(src)], rgb[len(src):]))
+    out = img.copy()
+    out.putdata([(*swap.get(p[:3], p[:3]), p[3]) for p in img.get_flattened_data()])
+    return out
+
+
+# Casting: designs given to particular enemy ids, ahead of the keyword families above. The horde
+# is monsters (creatures, living objects, toys and mascots gone bad); the few humanoid villain
+# parodies (vil_dr_yolk, vil_moon_witch, vil_skullord, vil_lord_wheezer, vil_general_bizarro)
+# only play bosses. Sizes are unchanged, so hitboxes are too.
+CAST = {
+    "mon_shroom": ["mudman_1"],
+    "mon_bomb": ["dust_elemental"],
+    "mon_sack": ["dust_elemental_boss", "unknown_2"],
+    "mon_tubby": ["milk_elemental", "milk_elemental_2"],
+    "mon_tomato": ["melone", "meat_golem_1"],
+    "mon_purple_dino": ["big_golem_1", "big_golem_1_lv29"],
+    "vil_dr_yolk": ["big_golem_2_boss"],
+    "mon_troll": ["musc_musc", "big_musc_musc"],
+    "mon_gargoyle": ["archon_ascia", "archon_lancia", "archon_spada", "skelewing", "skelewing_ino"],
+    "vil_lord_wheezer": ["archon_disco", "archon_rame_boss"],
+    "vil_megatyrant": ["fake_fallen_cherubbello", "fake_fallen_cherubbello_boss", "fallen_throne"],
+    "mon_glutton_ghost": ["ghost_swarm", "fallen_cherub", "fallen_cherubbello"],
+    "vil_drooler": ["the_stalker"],
+    "mon_eyeball_orb": ["the_maddener", "medusa_head", "lionhead", "lionhead_boss"],
+    "vil_sea_witch": ["the_drowner", "merdusa"],
+    "vil_gremlin": ["the_trickster", "nesufritto"],
+    "mon_eye_cluster": ["testa_di_mano_1", "testa_di_mano_2"],
+    "mon_wheel_bug": ["skeleton_ninja_1", "skulorosso"],
+    "mon_virtual_pet": ["skeleton_ninja_2"],
+    "mon_clip": ["skullino", "lizard_pawn"],
+    "vil_skullord": ["scarleton", "skullone_boss"],
+    "mon_shark": ["merman_3", "merman_boss"],
+    "mon_kaiju": ["tritont"],
+    "mon_fire_lizard": ["dragon_shrimp_1", "dragon_shrimp_1_flag", "dragon_shrimp_2",
+                        "dragon_shrimp_2_flag"],
+    "vil_king_krusher": ["dragon_shrimp_1_boss", "dragon_shrimp_2_boss"],
+    "mon_animatronic": ["werewolf_1_boss", "colossal_musc_musc"],
+    "mon_raptor": ["demon_beast", "demon_beast_2"],
+    "mon_whirl_devil": ["mignotaur", "mignotaur_rush"],
+    "vil_moon_witch": ["hag", "undead_sassy_witch"],
+    "mon_fuzzy_toy": ["undead_mage", "ghiavolo", "impefinger"],
+    "mon_zap_rodent": ["succubus", "harzia", "harzia_v"],
+    "mon_pitcher": ["succubus_boss"],
+    "mon_beanbag_bear": ["demon_priest", "lost_twin"],
+    "vil_general_bizarro": ["elite_devil", "archdemon_boss"],
+    "mon_roach": ["mantichana_boss", "giant_enemy_crab"],
+    "vil_quadro": ["manticore"],
+    "mon_thwomper": ["lizard_rook", "axe_guardian"],
+    "vil_exterminator": ["sword_guardian"],
+    "mon_squid": ["tetrabrachia_1", "tetrabrachia_2"],
+    "mon_marshmallow": ["big_mummy", "big_mummy_boss"],
+    "mon_sandworm": ["trinacria"],
+}
+CAST_OF = {eid: tid for tid, eids in CAST.items() for eid in eids}
+
+
+# These hover instead of walking: their cycle is a bob, not a step.
+FLOATERS = {"mon_pizza_bat", "mon_vhs_ghost", "mon_crt_head", "mon_slime_jelly", "mon_dialup_demon",
+            "mon_late_fee", "mon_glutton_ghost", "mon_eyeball_orb", "mon_squid", "mon_thwomper",
+            "mon_whirl_devil", "vil_dr_yolk", "char_couch"}
+
+
+def step_cycle(img, floats=False):
+    """Four frames of movement from one sprite, for the game's frame cycling.
+
+    A walker steps: neutral, front foot up, neutral, back foot up. On a step the body dips one
+    pixel and the legs shorten by a row, and the lifted foot's half of the legs rises a pixel.
+    A floater bobs a pixel up and down instead. The sprite faces right, so its front is the right.
+    """
+    w, h = img.size
+    if floats:
+        up, down = Image.new("RGBA", (w, h + 1)), Image.new("RGBA", (w, h + 1))
+        up.paste(img, (0, 0))
+        down.paste(img, (0, 1))
+        return [up, up, down, down]
+    legs = max(3, round(h * 0.22))
+    top = h - legs
+    steps = []
+    for x0, x1 in ((w // 2, w), (0, w // 2)):  # the half whose foot lifts
+        f = Image.new("RGBA", (w, h))
+        f.paste(img.crop((0, top + 1, w, h)), (0, top + 1))  # legs, a row shorter
+        f.paste(Image.new("RGBA", (x1 - x0, legs)), (x0, top))
+        f.paste(img.crop((x0, top + 1, x1, h)), (x0, top))  # this foot, a pixel higher
+        f.paste(img.crop((0, 0, w, top)), (0, 1))  # body, a pixel lower
+        steps.append(f)
+    return [img, steps[0], img, steps[1]]
 
 
 def family(eid):
+    if eid in CAST_OF:
+        return CAST_OF[eid]
     return next((t for word, t in FAMILY if word in eid), DEFAULT_MONSTER)
 
 
@@ -98,26 +215,62 @@ def main():
     picks = json.loads((HERE / "picks.json").read_text()) if (HERE / "picks.json").exists() else {}
     cache = {}
 
-    def sprite(tid, h):
-        if (tid, h) not in cache:
+    def sprite(tid, h, box=False):
+        """One frame at height h; box=True also caps the width at h (icons, projectiles)."""
+        if (tid, h, box) not in cache:
             src = RAW / f"{tid}_s{picks.get(tid, 90)}.png"
-            cache[tid, h] = pixelize(src, h)
-        return [cache[tid, h]]
+            img = pixelize(src, h)
+            if box and img.width > h:
+                img = pixelize(src, max(1, h * img.height // img.width))
+            cache[tid, h, box] = img
+        return [cache[tid, h, box]]
+
+    def variant(kind, wid):
+        """wi_<id> (icon) or ws_<id> (projectile) when that weapon has its own render, else wp_<id>."""
+        return f"{kind}_{wid}" if (RAW / f"{kind}_{wid}_s90.png").exists() else f"wp_{wid}"
+
+    def moving(tid, h):
+        if (tid, h, "cycle") not in cache:
+            img = sprite(tid, h)[0]
+            if img.height * 2 <= h:  # a coarse render: whole-number enlarge to its tier
+                k = h // img.height
+                img = img.resize((img.width * k, img.height * k), Image.NEAREST)
+            cache[tid, h, "cycle"] = step_cycle(img, tid in FLOATERS)
+        return cache[tid, h, "cycle"]
 
     items = {}
     for cid, tid in HEROES.items():
-        items[f"char:{cid}"] = sprite(tid, 40)
+        items[f"char:{cid}"] = moving(tid, 40)
     for eid in list(g["enemies"]) + ["reaper"]:
-        items[f"enemy:{eid}"] = sprite(family(eid), enemy_height(eid))
+        items[f"enemy:{eid}"] = moving(family(eid), enemy_height(eid))
     for k, tid in PICKUPS.items():
         items[f"pickup:{k}"] = sprite(tid, PICKUP_H.get(k, 14))
     for k, tid in LIGHTS.items():
         items[f"light:{k}"] = sprite(tid, 28)
+    for wid in g["weapons"]:
+        items[f"wicon:{wid}"] = sprite(variant("wi", wid), 16, box=True)
+    for wid, size in WSPR.items():
+        items[f"wspr:{wid}"] = sprite(variant("ws", wid), size, box=True)
+    for wid, own in RINGS.items():
+        base = items[f"wspr:{wid}"][0]
+        items[f"wspr:{wid}"] = [base] + [recolour(base, CANDY[own], ramp)
+                                         for name, ramp in CANDY.items() if name != own]
+    for pid in g["passives"]:
+        items[f"passive:{pid}"] = sprite(PASSIVES.get(pid, f"pa_{pid}"), 16, box=True)
+    for aid in g["arcanas"]:
+        card = sprite(f"ar_{aid}", CARD_H)[0]
+        if card.height < CARD_H:  # a coarser render: enlarge it so every card is the same size
+            card = card.resize((round(card.width * CARD_H / card.height), CARD_H), Image.NEAREST)
+        items[f"arcana:{aid}"] = [card]
+        items[f"arcana_icon:{aid}"] = sprite(f"ar_{aid}", 20)
 
     q = Image.new("P", (1, 1))
     colors = [tuple(int(c[i:i + 2], 16) for i in (0, 2, 4)) for c in BASE + NEON]
     q.putpalette([v for c in colors for v in c] + [0] * 3 * (256 - len(colors)))
-    pages, index = pack(items, colors, q)
+    # pack each distinct frame once: most keys share their frames with other keys
+    frames = {id(f): f for fs in items.values() for f in fs}
+    pages, rects = pack({str(n): [f] for n, f in frames.items()}, colors, q)
+    index = {key: [rects[str(id(f))][0] for f in fs] for key, fs in items.items()}
 
     OUT.mkdir(parents=True, exist_ok=True)
     for old in OUT.glob("page_*.png"):

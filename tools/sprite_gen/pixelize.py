@@ -26,13 +26,19 @@ def key_mask(rgb, tol=70, hole_tol=30):
 
     Background is whatever connects to the border and sits within `tol` of the
     border's median colour, so a pink pog enclosed by its outline survives.
+    Shadows the model casts on the backdrop count as background too.
     Enclosed pockets (between arm and body) count as background only when they
     are a near-exact match (`hole_tol`), which spares deliberate pinks.
     """
     h, w, _ = rgb.shape
     border = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]])
-    dist = np.sqrt(((rgb - np.median(border, 0)) ** 2).sum(-1))
-    near = dist < tol
+    back = np.median(border, 0)
+    dist = np.sqrt(((rgb - back) ** 2).sum(-1))
+    # a cast shadow is the background, only darker: red and blue dimmed by the same factor
+    k = rgb / np.maximum(back, 1)
+    shadow = (np.abs(k[..., 0] - k[..., 2]) < 0.1) & (k[..., 0] > 0.4) & (k[..., 0] < 1.05) \
+        & (rgb[..., 1] < back[1] + 25)
+    near = (dist < tol) | shadow
     bg = np.zeros((h, w), bool)
     stack = [(y, x) for y in range(h) for x in (0, w - 1)] + [(y, x) for x in range(w) for y in (0, h - 1)]
     while stack:

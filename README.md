@@ -48,9 +48,10 @@ Weapons fire on their own. Your job is to move, choose upgrades, and stay alive 
 
 ## Why you'll like it
 
-- 🍕 **A whole original 90s cast.** Pizza bats, VHS ghosts, CRT heads, tape mummies,
-  aerobics witches, chattering teeth, skate skeletons, mall zombies and slinky snakes.
-  There are twenty monster families in all, spread across 120+ enemy variants.
+- 🍕 **A whole 90s monster horde.** Pizza bats, VHS ghosts, CRT heads, tape mummies, walking
+  bombs, a purple dinosaur mascot, a broken animatronic rat, killer tomatoes, an atomic kaiju and
+  a very angry paperclip. There are over sixty monster designs across 130+ enemy variants, and
+  the bosses are parodies of 90s villains.
 - 🐢 **24 playable characters.** Four teen mutant reptile heroes (Snapjaw, Dash, Boxer,
   Chomp) head a crew of 90s kids: skater, grunge rocker, raver, mall rat, pizza guy, and a
   grandma in a shell suit.
@@ -120,17 +121,21 @@ intervals, bosses, swarms, walls and stalkers.
 <details>
 <summary><b>How the 90s sprites were made</b></summary>
 
-The theme swaps the characters, enemies, pickups and light sources, renames the cast and
-stages (`themes/nineties/names.json`) and restyles the terrain (`terrain90s.py`). Weapon
-icons, projectiles, passive icons and Arcana cards still use pixel mode. Every VS enemy id maps to a
-monster family by keyword; big variants and bosses are re-pixelized larger from the same
-render.
+The theme swaps every sprite in the game: characters, enemies, pickups, light sources, weapon
+icons and projectiles, passive icons and Arcana cards. It also renames the cast, stages and
+items (`themes/nineties/names.json`: the Whip is a Slap Bracelet, the King Bible a circle of
+candy rings in six colours) and restyles the terrain (`terrain90s.py`). Every VS enemy id
+maps to a monster design, by name (`CAST` in `build_theme.py`) or by keyword family; big
+variants and bosses are re-pixelized larger from the same render. Characters and enemies move on
+a four-frame cycle derived from their one picked sprite. Weapon effects that are drawn in code (slashes, bolts, flames, lightning) are
+shared by all art modes.
 
 The sprites were generated locally with ComfyUI and packed into `themes/nineties/`:
 
 ```bash
 uv run tools/sprite_gen/gen.py tools/sprite_gen/theme90s_prompts.json --arm qpixel=0.5 --seed 90 --seed 91
 uv run --with pillow --with numpy tools/sprite_gen/picksheet.py tools/sprite_gen/raw/picks.png mon_
+uv run --with pillow --with numpy tools/sprite_gen/picksheet.py tools/sprite_gen/raw/icons.png --box 16 wp_ pa_
 uv run --with pillow --with numpy tools/sprite_gen/build_theme.py   # picks.json -> themes/nineties/
 ```
 

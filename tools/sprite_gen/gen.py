@@ -52,6 +52,7 @@ def main():
     ap.add_argument("--arm", action="append", default=[])
     ap.add_argument("--seed", action="append", type=int, default=[])
     ap.add_argument("--only", nargs="*")
+    ap.add_argument("--missing", action="store_true", help="skip renders that already exist")
     a = ap.parse_args()
     wf = json.loads((HERE / "workflow_api.json").read_text())
     prompts = json.loads(pathlib.Path(a.prompts).read_text())
@@ -62,6 +63,8 @@ def main():
             if a.only and pid not in a.only:
                 continue
             for seed in a.seed or [90]:
+                if a.missing and (out / f"{pid}_s{seed}.png").exists():
+                    continue
                 t = time.time()
                 (out / f"{pid}_s{seed}.png").write_bytes(render(wf, prompt, seed, arm))
                 print(f"{arm:14} {pid:12} s{seed} {time.time() - t:5.1f}s", flush=True)

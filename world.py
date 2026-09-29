@@ -872,7 +872,7 @@ class World:
             if (lv or len(self.passives) < 6) and lv < data.PASSIVES[pid]["max_level"]:
                 self.passives[pid] = lv + 1
                 self.recompute_stats()
-                self.floaters.append(Floater(p.x, p.y - 22, data.PASSIVES[pid]["name"].upper(), 10, 40))
+                self.floaters.append(Floater(p.x, p.y - 22, art.name("passives", data.PASSIVES[pid]).upper(), 10, 40))
             else:  # no free slot or already maxed
                 self.gain_gold(25)
             self.sfx("level")
@@ -969,19 +969,21 @@ class World:
         """(name, tag, description) for a level-up option (wiki text)."""
         t, i = opt
         if t == "x":
-            return ("Floor Chicken", "", "Heals 30 HP.") if i == "chicken" else \
+            return (art.label("pickups", "chicken", "name", "Floor Chicken"), "", "Heals 30 HP.") \
+                if i == "chicken" else \
                 ("Gold Coins", "", "Gain 25 gold.")
         if t == "w":
             spec = data.WEAPONS[i]
             w = self.weapon(i)
             if not w:
-                return spec["name"], "New!", spec["desc"]
+                return art.name("weapons", spec), "New!", art.name("weapons", spec, "desc")
             lv = spec["level_desc"]
             desc = lv[w.level] if w.level < len(lv) else ""
-            return spec["name"], f"Lv {w.level + 1}", desc
+            return art.name("weapons", spec), f"Lv {w.level + 1}", desc
         spec = data.PASSIVES[i]
         lv = self.passives.get(i, 0)
-        return spec["name"], "New!" if lv == 0 else f"Lv {lv + 1}", spec["desc"]
+        return (art.name("passives", spec), "New!" if lv == 0 else f"Lv {lv + 1}",
+                art.name("passives", spec, "desc"))
 
     # ------------------------------------------------------------- chest
 

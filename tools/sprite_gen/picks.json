@@ -4,5 +4,21 @@
   "mon_arcade_mimic": 91, "mon_bull_biker": 91, "mon_figure_trooper": 91, "mon_late_fee": 91,
   "mon_sewer_gator": 91, "mon_slime_jelly": 91, "mon_slinky_snake": 91, "mon_toxic_ooze": 91,
   "mon_vhs_ghost": 91,
-  "pk_clock": 91, "pk_nduja": 91, "pk_chest_arcana": 91, "pk_richbag": 91, "lt_lavalamp": 91
+  "pk_clock": 91, "pk_nduja": 91, "pk_chest_arcana": 91, "pk_richbag": 91, "lt_lavalamp": 91,
+  "wp_ebony_wings": 91, "wp_garlic": 91, "wp_gorgeous_moon": 91, "wp_holy_wand": 91,
+  "wp_pentagram": 91, "wp_runetracer": 91, "wp_santa_water": 91, "wp_soul_eater": 91,
+  "wp_thunder_loop": 91, "wp_vandalier": 91, "wp_celestial_dusting": 91, "wp_cherry_bomb": 91,
+  "wp_clock_lancet": 91, "wp_eight_the_sparrow": 91, "wp_gatti_amari": 91,
+  "wp_infinite_corridor": 91, "wp_laurel": 91, "wp_mannajja": 91, "wp_shadow_pinion": 91,
+  "wp_tri_bracelet": 91, "ws_shadow_pinion": 91,
+  "pa_bracer": 91, "pa_crown": 91, "pa_duplicator": 91, "pa_hollow_heart": 91,
+  "pa_metaglio_left": 91, "pa_parm_aegis": 91, "pa_skull_omaniac": 91, "pa_tirajisu": 91,
+  "pa_wings": 91,
+  "ar_T00_KILLER": 91, "ar_T01_AQUARIUS": 91, "ar_T03_TRAGIC": 91, "ar_T04_AWAKE": 91,
+  "ar_T10_BEGINNING": 91, "ar_T11_PEARLS": 91, "ar_T12_OUT_OF_TIME": 91, "ar_T13_WICKED": 91,
+  "ar_T14_JEWELS": 91, "ar_T15_GOLD": 91, "ar_T16_SLASH": 91, "ar_T17_PAINTING": 91,
+  "ar_T18_ILLUSIONS": 91, "ar_T19_FIRE": 91,
+  "vil_dr_yolk": 91, "vil_megatyrant": 91, "vil_moon_witch": 91, "vil_sea_witch": 91, "vil_skullord": 91,
+  "mon_eye_cluster": 91, "mon_eyeball_orb": 91, "mon_purple_dino": 91, "mon_shroom": 91, "mon_tomato": 91,
+  "mon_fuzzy_toy": 91, "mon_raptor": 91, "mon_shark": 91, "mon_zap_rodent": 91, "vil_king_krusher": 91
 }
