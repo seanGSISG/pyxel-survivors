@@ -1,0 +1,116 @@
+"""Turn a 1024px magenta-backed render into a palette-locked game sprite.
+
+    uv run --with pillow --with numpy tools/sprite_gen/pixelize.py raw/base/snapjaw_s90.png out.png --height 32
+
+Steps: key out the magenta background, crop to the subject, snap every pixel
+to the theme palette at full resolution, then downsample by taking the most
+common colour in each block (a mode filter keeps outlines crisp where a box
+average would smear them). Transparent pixels come out as alpha 0.
+"""
+
+import argparse
+
+import numpy as np
+from PIL import Image
+
+# Pyxel's 16 base colours, then the 16-colour 90s extension (theme slots 22-37).
+BASE = ["000000", "2B335F", "7E2072", "19959C", "8B4852", "395C98", "A9C1FF", "EEEEEE",
+        "D4186C", "D38441", "E9C35B", "70C6A9", "7696DE", "A3A3A3", "FF9798", "EDC7B0"]
+NEON = ["2E5A1C", "5E8C31", "9BC53D", "6B3E26", "B0703A", "FF2BD6", "00F0E0", "9D4EDD",
+        "FFE14D", "FF7A1A", "1A1033", "3D2C5E", "5C5C70", "C4122F", "7A0F2A", "F5E6C8"]
+PALETTE = np.array([[int(c[i:i + 2], 16) for i in (0, 2, 4)] for c in BASE + NEON], float)
+
+
+def key_mask(rgb, tol=70):
+    """True where the pixel is subject.
+
+    Background is whatever connects to the border and sits within `tol` of the
+    border's median colour, so a pink pog enclosed by its outline survives.
+    """
+    h, w, _ = rgb.shape
+    border = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]])
+    near = np.sqrt(((rgb - np.median(border, 0)) ** 2).sum(-1)) < tol
+    bg = np.zeros((h, w), bool)
+    stack = [(y, x) for y in range(h) for x in (0, w - 1)] + [(y, x) for x in range(w) for y in (0, h - 1)]
+    while stack:
+        y, x = stack.pop()
+        if 0 <= y < h and 0 <= x < w and near[y, x] and not bg[y, x]:
+            bg[y, x] = True
+            stack += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+    return ~bg
+
+
+def snap(rgb):
+    """Index of the nearest palette colour for every pixel."""
+    d = ((rgb[..., None, :] - PALETTE) ** 2).sum(-1)
+    return d.argmin(-1)
+
+
+def grid(rgb, axis):
+    """(period, phase) of the render's own pixel grid along one axis.
+
+    Colour steps between neighbouring columns (or rows) pile up on the cell
+    borders, so the step profile is periodic; autocorrelation finds the period
+    and the best-aligned comb finds the phase.
+    """
+    step = np.abs(np.diff(rgb, axis=axis)).sum(-1).sum(1 - axis)
+    step = step - step.mean()
+    ac = np.correlate(step, step, "full")[len(step) - 1:]
+    lo = 8
+    p = lo + int(ac[lo:80].argmax())
+    # refine to a fractional period with a parabola through the peak
+    a, b, c = ac[p - 1], ac[p], ac[p + 1]
+    period = p + 0.5 * (a - c) / (a - 2 * b + c) if a - 2 * b + c else p
+    n = len(step)
+    phases = np.arange(0, period, 0.5)
+    score = [step[np.clip(np.round(np.arange(ph, n, period)).astype(int), 0, n - 1)].sum() for ph in phases]
+    return period, phases[int(np.argmax(score))] + 1
+
+
+def native(src):
+    """Sample one colour per detected grid cell: the render at its own resolution."""
+    rgb = np.asarray(Image.open(src).convert("RGB"), float)
+    (px, ox), (py, oy) = grid(rgb, 1), grid(rgb, 0)
+    xs = np.arange(ox + px / 2 - px, rgb.shape[1], px)
+    ys = np.arange(oy + py / 2 - py, rgb.shape[0], py)
+    xs = xs[(xs >= 0) & (xs < rgb.shape[1])].astype(int)
+    ys = ys[(ys >= 0) & (ys < rgb.shape[0])].astype(int)
+    # median of the cell's central quarter resists anti-aliased borders
+    r = max(1, int(min(px, py) / 4))
+    cells = np.array([[np.median(rgb[max(0, y - r):y + r + 1, max(0, x - r):x + r + 1].reshape(-1, 3), 0)
+                       for x in xs] for y in ys])
+    return cells, (px, py)
+
+
+def pixelize(src, height):
+    rgb, _ = native(src)
+    mask = key_mask(rgb)
+    ys, xs = np.nonzero(mask)
+    y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+    rgb, mask = rgb[y0:y1, x0:x1], mask[y0:y1, x0:x1]
+    idx = np.where(mask, snap(rgb), -1)  # -1 = transparent
+    h, w = idx.shape
+    th = min(height, h)  # never upscale; only shrink sprites taller than the cap
+    tw = max(1, round(w * th / h))
+    out = np.full((th, tw), -1)
+    for ty in range(th):
+        for tx in range(tw):
+            cell = idx[ty * h // th:(ty + 1) * h // th, tx * w // tw:(tx + 1) * w // tw].ravel()
+            vals, counts = np.unique(cell, return_counts=True)
+            opaque = vals >= 0
+            # keep the pixel if at least 40% of the block is subject
+            if counts[opaque].sum() >= 0.4 * cell.size:
+                out[ty, tx] = vals[opaque][counts[opaque].argmax()]
+    img = np.zeros((th, tw, 4), np.uint8)
+    img[out >= 0, :3] = PALETTE[out[out >= 0]].astype(np.uint8)
+    img[out >= 0, 3] = 255
+    return Image.fromarray(img, "RGBA")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("src")
+    ap.add_argument("dst")
+    ap.add_argument("--height", type=int, default=64)
+    a = ap.parse_args()
+    pixelize(a.src, a.height).save(a.dst)
