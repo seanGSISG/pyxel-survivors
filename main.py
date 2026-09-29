@@ -18,6 +18,7 @@ import art
 import data
 import icons
 import sprites
+import terrain90s
 import weapons
 from weapons import draw_proj
 from world import FPS, LIGHT_KIND, MIN, World
@@ -219,7 +220,7 @@ class App(World):
     # ------------------------------------------------------------- flow
 
     def start_run(self, char_id, stage_id, arcana_ids):
-        pyxel.colors[16:21] = TERRAIN[stage_id]
+        pyxel.colors[16:21] = (terrain90s.PALETTE if art.MODE == "90s" else TERRAIN)[stage_id]
         self.new_game(char_id, stage_id, arcana_ids)
         self.state = "play"
         pyxel.playm(0, loop=True)
@@ -491,7 +492,7 @@ class App(World):
             sel = i == self.stage_sel
             pyxel.rect(x, y, cw, 150, 1 if sel else 0)
             pyxel.rectb(x, y, cw, 150, 10 if sel else 5)
-            for k, c in enumerate(SWATCH[sid]):
+            for k, c in enumerate((terrain90s.SWATCH if art.MODE == "90s" else SWATCH)[sid]):
                 pyxel.rect(x + 6 + k * 19, y + 6, 19, 8, c)
             w0 = st["waves"][0]
             if w0["enemies"]:
@@ -505,7 +506,8 @@ class App(World):
                    "vertical": "Tower (up-down)"}[st["layout"]]
             shadow_text(x + cw / 2 - text_w(lay) / 2, y + 82, lay, 13)
             shadow_text(x + cw / 2 - text_w("30:00") / 2, y + 92, "30:00", 13)
-            for k, line in enumerate(wrap(st["desc"], 20)[:5]):
+            desc = art.label("stages", sid, "desc", st["desc"])
+            for k, line in enumerate(wrap(desc, 20)[:5]):
                 shadow_text(x + 5, y + 104 + k * 8, line, 6 if sel else 5)
         st = data.STAGES[data.STAGE_ORDER[self.stage_sel]]
         n_en = len({e for w in st["waves"] for e in w["enemies"] + w["bosses"]})
@@ -572,7 +574,10 @@ class App(World):
         cx, cy = int(self.cam_x) + sx, int(self.cam_y) + sy
         pyxel.cls(T0)
         pyxel.camera(cx, cy)
-        getattr(self, "terrain_" + self.stage["id"])(cx, cy)
+        if art.MODE == "90s":
+            terrain90s.draw(self, cx, cy)
+        else:
+            getattr(self, "terrain_" + self.stage["id"])(cx, cy)
         ground = getattr(weapons, "GROUND_KINDS", {"water", "borra"})
         for pr in self.projs:
             if pr.kind in ground:

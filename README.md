@@ -120,8 +120,9 @@ intervals, bosses, swarms, walls and stalkers.
 <details>
 <summary><b>How the 90s sprites were made</b></summary>
 
-The theme swaps the characters, enemies, pickups and light sources. Weapon icons,
-projectiles, Arcana cards and terrain still use pixel mode. Every VS enemy id maps to a
+The theme swaps the characters, enemies, pickups and light sources, renames the cast and
+stages (`themes/nineties/names.json`) and restyles the terrain (`terrain90s.py`). Weapon
+icons, projectiles, passive icons and Arcana cards still use pixel mode. Every VS enemy id maps to a
 monster family by keyword; big variants and bosses are re-pixelized larger from the same
 render.
 
@@ -162,9 +163,10 @@ uv run tools/build_gamedata.py         # classic-core selection -> gamedata.json
 | `weapons.py` | 50 weapon behaviours (update/draw per kind) |
 | `arcanas.py` | 22 Arcana effects via hooks |
 | `art.py` | 90s theme atlas vs pixel-art renderer |
+| `terrain90s.py` | 90s theme stage terrain (arcade, sewer, rooftop, mall, CRT grid) |
 | `data.py` | loads `gamedata.json`, engine constants, evolution table |
 | `sprites.py`, `icons.py` | generated pixel art |
-| `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas and its ComfyUI generation pipeline |
+| `themes/nineties/`, `tools/sprite_gen/` | 90s theme atlas, display names and the ComfyUI generation pipeline |
 | `tools/weapon_lab.py` | standalone arena for eyeballing weapons |
 | `tools/build_web.py` | browser build (Pyxel WASM) for GitHub Pages; `--bench` measures fps |
 | `scenarios/` | headless test entry points (autopilot runs, full 30-min runs per stage, weapon lab, Arcanas, README footage `show_*.py`) |

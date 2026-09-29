@@ -1,5 +1,7 @@
 {
-  "screens": {"title": {"tagline": "a Vampire Survivors tribute, rewound to the 90s"}},
+  "screens": {
+    "title": {"tagline": "a Vampire Survivors tribute, rewound to the 90s"}
+  },
   "characters": {
     "antonio_belpaese": {"alias": "Snapjaw", "name": "Snapjaw the Snapper"},
     "imelda_belpaese": {"alias": "Dash", "name": "Dash the Gecko"},
@@ -25,5 +27,12 @@
     "iguana_gallo_valletto": {"alias": "Iggy", "name": "Iggy on the Line"},
     "divano_thelma": {"alias": "Couch", "name": "Couch Potato"},
     "zi_assunta_belpaese": {"alias": "Nana", "name": "Nana Curlers"}
+  },
+  "stages": {
+    "mad_forest": {"name": "Token Arcade", "desc": "The carpet glows, the cabinets hum, and something keeps eating the quarters."},
+    "inlaid_library": {"name": "Sewer Tunnels", "desc": "One long pipe under the city, ankle deep in ooze. Mind what got flushed in 1993."},
+    "dairy_plant": {"name": "Rooftop Row", "desc": "Tar, vents and satellite dishes as far as the skyline. Nobody comes up here."},
+    "gallo_tower": {"name": "Neon Mall", "desc": "Four hundred shops and not one open. The zombies are still browsing."},
+    "cappella_magna": {"name": "The CRT Grid", "desc": "Inside the screen, where the late fees come from. Do not adjust your set."}
   }
 }
