@@ -69,8 +69,9 @@ FAMILY = [
 DEFAULT_MONSTER = "mon_toxic_ooze"
 
 PICKUPS = {k: f"pk_{k}" for k in (
-    "gem", "gem_green", "gem_red", "chicken", "coin", "coinbag", "richbag", "rosary",
+    "gem", "gem_green", "gem_red", "coin", "coinbag", "richbag", "rosary",
     "clock", "vacuum", "nduja", "clover", "chest", "chest_evo", "chest_arcana")}
+PICKUPS["chicken"] = "pk_heart"  # healing is a 1UP heart: pizza would read as the pizza-bat enemies
 LIGHTS = {"brazier": "lt_boombox", "candelabrone": "lt_lavalamp", "lampost": "lt_neonpost",
           "lantern": "lt_jukebox", "blue_brazier": "lt_bluelamp"}
 PICKUP_H = {"gem": 10, "gem_green": 12, "gem_red": 14, "coin": 10, "chest": 16,

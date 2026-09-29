@@ -46,7 +46,6 @@
   "pk_gem": "Pixel art game item icon of a single small round collectible cardboard pog milk cap, face on, bright blue and white swirl pattern, thin white rim.",
   "pk_gem_green": "Pixel art game item icon of a single round collectible cardboard pog milk cap, face on, bright green and yellow starburst pattern, thin white rim.",
   "pk_gem_red": "Pixel art game item icon of a single round shiny metal pog slammer, face on, red with a gold skull emblem, thick rim.",
-  "pk_chicken": "Pixel art game item icon of a single slice of pepperoni pizza with melted cheese, seen from above at an angle.",
   "pk_coin": "Pixel art game item icon of a single gold arcade game token coin with a star stamped in the middle, face on.",
   "pk_coinbag": "Pixel art game item icon of a small paper cup overflowing with gold arcade tokens.",
   "pk_richbag": "Pixel art game item icon of a pink piggy bank overflowing with gold arcade tokens.",
@@ -62,5 +61,6 @@
   "lt_lavalamp": "Pixel art game sprite of a tall lava lamp with glowing orange and pink blobs, front view.",
   "lt_neonpost": "Pixel art game sprite of a city street lamp post with a glowing hot pink neon tube light on top, front view.",
   "lt_jukebox": "Pixel art game sprite of a small glowing retro jukebox with rainbow neon bubble tubes, front view.",
-  "lt_bluelamp": "Pixel art game sprite of a tall lava lamp with glowing blue and teal blobs, front view."
+  "lt_bluelamp": "Pixel art game sprite of a tall lava lamp with glowing blue and teal blobs, front view.",
+  "pk_heart": "Pixel art game item icon of a single glossy red heart-shaped candy with a white shine highlight and the text 1UP on it."
 }

@@ -57,6 +57,8 @@ Weapons fire on their own. Your job is to move, choose upgrades, and stay alive 
 - ⚔️ **The real Vampire Survivors rules.** Weapon stats, per-level gains, evolutions,
   minute-by-minute wave tables, bosses, map events and chest odds all come straight from the
   community wiki.
+- 🗺️ **Loot on the map, like the original.** Every stage has its wiki stage items (passives
+  lying at fixed spots) and light sources that drop 1UP hearts, coins, Rosaries and more.
 - 🃏 **All 22 Arcanas**, 50 weapons (28 base + 22 evolutions and unions), 24 passive items,
   and light sources with the real drop table.
 - 🖥️ **Runs anywhere Python does.** It renders at 480×270 and 30 fps, with no engine install
@@ -72,6 +74,13 @@ Weapons fire on their own. Your job is to move, choose upgrades, and stay alive 
 <td align="center"><sub>Survive to 30:00 and <b>The Late Fee</b> comes to collect</sub></td>
 </tr>
 </table>
+
+<div align="center">
+<img src="docs/media/opening.gif" alt="The first seconds of Dairy Plant: outrunning the sewer-gator horde and grabbing the Armor stage item" width="80%">
+<br>
+<sub>The first 11 seconds of Dairy Plant: break a light source for a <b>1UP heart</b>, outrun the
+sewer-gator horde, and pick up the <b>Armor</b> lying two tilesets northeast.</sub>
+</div>
 
 ## Five stages
 
