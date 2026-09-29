@@ -172,7 +172,7 @@ headlessly with the pyxel MCP `run` tool, which also recorded every GIF on this 
 - Gemini adds +1 Amount instead of spawning true counterpart weapons; Game Killer gems
   fire a fireball.
 - Gatti Amari cats don't steal pickups; Celestial Dusting doesn't drop hearts.
-- Stage terrain is procedural (the wiki has no tilesets); no stage items or coffins.
+- Stage terrain is procedural (the wiki has no tilesets). Stage items (passives lying on the map) are placed per the wiki, but there are no coffins; a few light sources are pre-placed at the start.
 - No meta-progression (PowerUps, unlocks, gold shop); everything is available from the start.
 - The test autopilot plays auto-aim builds well but is poor with the one-sided Whip.
 

@@ -781,6 +781,11 @@ class App(World):
                 pyxel.pal()
             if it.t // 8 % 2:
                 pyxel.pset(x + 6, y - 10 + bob, 7)
+        elif k.startswith("item:"):  # stage item: a passive lying on the map
+            bob = math.sin(it.t * 0.1) * 2
+            pyxel.elli(x - 7, y + 7, 14, 4, T3)
+            pyxel.circb(x, y + bob, 10 + (it.t // 6) % 3, 10 if it.t // 10 % 2 else 9)
+            art.icon(k[5:], x, y + bob)
         elif not art.pickup(k, x, y + math.sin(it.t * 0.12), it.t):
             key = "little_clover" if k == "clover" else k if k in icons.SLOT else "coin"
             icons.draw(key, x, y, 2)

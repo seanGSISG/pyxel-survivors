@@ -200,10 +200,22 @@ class World:
         for aid in self.arc.active:
             self.arc.on_add(aid)
         self.cam_x, self.cam_y = -W / 2, -H / 2
+        self.place_stage_items()
+        for _ in range(data.START_LIGHTS):
+            a, r = random.uniform(0, math.tau), random.uniform(0.25, 0.9) * W
+            self.enemies.append(Enemy(None, *self.clamp_to_layout(math.cos(a) * r, math.sin(a) * r), self))
         if cfg.get("chest"):  # test hook: an evolution-capable chest nearby
             ch = Pickup("chest", 50, 0)
             ch.treasure = dict(evo="1", tier3="0", tier2="0", tier1="100")
             self.pickups.append(ch)
+
+    def place_stage_items(self):
+        """Wiki stage items: passives at fixed spots around the start (chained chances)."""
+        for pid, spots in data.STAGE_ITEMS.get(self.stage["id"], []):
+            for dx, dy, chance in spots:
+                if random.random() > chance:
+                    break
+                self.pickups.append(Pickup(f"item:{pid}", dx * data.TILESET, dy * data.TILESET))
 
     # ------------------------------------------------------------- stats
 
@@ -285,6 +297,15 @@ class World:
             p.y = max(-H * 0.55, min(H * 0.55, p.y))
         elif lay == "vertical":
             p.x = max(-W * 0.3, min(W * 0.3, p.x))
+
+    def clamp_to_layout(self, x, y):
+        """Keep a placed object inside the walkable band of corridor/tower stages."""
+        lay = self.stage["layout"]
+        if lay == "horizontal":
+            y = max(-H * 0.45, min(H * 0.45, y))
+        elif lay == "vertical":
+            x = max(-W * 0.25, min(W * 0.25, x))
+        return x, y
 
     def p_invuln(self, frames):
         self.p.inv = max(self.p.inv, int(frames))
@@ -729,7 +750,7 @@ class World:
             if e.flash:
                 e.flash -= 1
             if e.prop:
-                if abs(e.x - p.x) > W * 1.2 or abs(e.y - p.y) > H * 1.2:
+                if abs(e.x - p.x) > W * 3 or abs(e.y - p.y) > H * 3:  # persist nearby, like VS
                     e.dead = True
                 continue
             if e.ttl > 0:
@@ -810,7 +831,7 @@ class World:
             it.t += 1
             dx, dy = p.x - it.x, p.y - it.y
             d2 = dx * dx + dy * dy
-            if it.kind != "chest" and not it.fly and d2 < mag2:
+            if it.kind != "chest" and not it.kind.startswith("item:") and not it.fly and d2 < mag2:
                 it.fly = True
                 it.vel = -2.0
             if it.fly:
@@ -845,6 +866,16 @@ class World:
         elif k == "chicken":
             self.heal(30)
             self.sfx("chicken")
+        elif k.startswith("item:"):
+            pid = k[5:]
+            lv = self.passives.get(pid, 0)
+            if (lv or len(self.passives) < 6) and lv < data.PASSIVES[pid]["max_level"]:
+                self.passives[pid] = lv + 1
+                self.recompute_stats()
+                self.floaters.append(Floater(p.x, p.y - 22, data.PASSIVES[pid]["name"].upper(), 10, 40))
+            else:  # no free slot or already maxed
+                self.gain_gold(25)
+            self.sfx("level")
         elif k == "rosary":
             self.flash_t = 8
             self.sfx("rosary")

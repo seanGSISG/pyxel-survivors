@@ -41,8 +41,9 @@ def _evolutions():
 
 EVOLUTIONS = _evolutions()
 
-# Enemy speed units -> px/frame. Zombie (100) ~1.1 px/f, bat ~1.5, player 1.8.
-SPEED_UNIT = 0.011
+# Enemy speed units -> px/frame. Zombie (100) ~0.84 px/f, bat (140) ~1.18, player 1.8:
+# the opening bats move at ~65% of the player, so a fresh run can outpace them as in VS.
+SPEED_UNIT = 0.0084
 PLAYER_SPEED = 1.8
 MAGNET_BASE = 26
 MAX_ENEMIES = 300
@@ -57,6 +58,36 @@ LIGHT_DROPS = [
     ("clover", 1, 0),
 ]
 GOLD = {"coin": 1, "coinbag": 10, "richbag": 100}
+START_LIGHTS = 5  # light sources pre-placed around the start (VS only spawns them over time)
+
+# Stage items (wiki "Stage items"): passives lying at fixed spots, in tilesets from the start.
+# Each entry is a chain of (dx, dy, chance): a spot only rolls if the previous one spawned.
+TILESET = 320  # world px per wiki tileset
+_D = 0.7071  # diagonal unit
+STAGE_ITEMS = {
+    "mad_forest": [
+        ("skull_omaniac", [(-6 * _D, -6 * _D, 1)]),
+        ("hollow_heart", [(0, -4.5, 1)]),
+        ("spinach", [(2 * _D + 3, -2 * _D, 1), (2 * _D + 5, -2 * _D, .3),
+                     (2 * _D + 4, 2 * _D, .2), (2 * _D + 6, 2 * _D, .1)]),
+        ("pummarola", [(0, 5, 1)]),
+        ("clover", [(-3 * _D - 4, 3 * _D, 1), (-4 * _D - 2, 4 * _D, .3),
+                    (-4 * _D - 4, 4 * _D, .2), (-3 * _D - 5, 3 * _D, .1)]),
+    ],
+    "inlaid_library": [
+        ("empty_tome", [(-5, 0, 1), (-6, 0, .4), (-7, 0, .3), (-8, 0, .2)]),
+        ("stone_mask", [(5, 0, 1)]),
+    ],
+    "dairy_plant": [
+        ("attractorb", [(-4 * _D, -4 * _D, 1)]), ("armor", [(2 * _D, -2 * _D, 1)]),
+        ("wings", [(-2 * _D, 2 * _D, 1)]), ("candelabrador", [(4 * _D, 4 * _D, 1)]),
+    ],
+    # the wiki gives only a direction for these two stages; 4 tilesets out
+    "gallo_tower": [("bracer", [(0, -4, 1)]), ("spellbinder", [(0, 4, 1)])],
+    "cappella_magna": [
+        ("crown", [(-0.5, -4, 1)]), ("tirajisu", [(0.5, -4, 1)]), ("duplicator", [(0, 4, 1)]),
+    ],
+}
 CHEST_SEQUENCE = [1, 1, 3, 1, 1, 5]
 
 
