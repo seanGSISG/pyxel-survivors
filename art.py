@@ -167,8 +167,14 @@ def icon(key, x, y, scale=1):
             return
     if key in icons.SLOT:
         icons.draw(key, x, y, 2 * scale)
-    else:
-        pyxel.circ(x, y, 4 * scale, 13)
+        return
+    # generic pixel-mode badge: a tinted gem with the item's initials
+    col = (8, 9, 10, 11, 12, 14, 6, 13)[sum(map(ord, key)) % 8]
+    pyxel.circ(x, y, 7 * scale, 1)
+    pyxel.circb(x, y, 7 * scale, col)
+    words = key.replace("_", " ").split()
+    s = (words[0][0] + (words[1][0] if len(words) > 1 else words[0][1])).upper()
+    pyxel.text(x - 3, y - 2, s, 7)
 
 
 def pickup(kind, x, y, t=0):

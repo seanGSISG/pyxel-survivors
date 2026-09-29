@@ -1186,6 +1186,7 @@
      "area": 1.0
     },
     {
+     "cd": 0.8,
      "dur": 0.5
     },
     {
@@ -1193,6 +1194,7 @@
      "area": 0.25
     },
     {
+     "cd": 0.8,
      "dur": 0.5
     },
     {
@@ -1200,6 +1202,7 @@
      "area": 0.25
     },
     {
+     "cd": 0.8,
      "dur": 0.5
     },
     {
@@ -1637,19 +1640,22 @@
      "area": 0.2
     },
     {
-     "dmg": 30.0
+     "dmg": 30.0,
+     "cd": 0.3
     },
     {
      "speed": 0.5
     },
     {
-     "dmg": 30.0
+     "dmg": 30.0,
+     "cd": 0.3
     },
     {
      "area": 0.2
     },
     {
-     "dmg": 30.0
+     "dmg": 30.0,
+     "cd": 0.3
     },
     {
      "speed": 0.5
@@ -3151,6 +3157,22 @@
    "image": "Sprite-Pipeestrello-3.png",
    "skills": ""
   },
+  "pipeestrello_swarm": {
+   "id": "pipeestrello_swarm",
+   "name": "Pipeestrello (swarm)",
+   "page": "Pipeestrello",
+   "hp": 1.0,
+   "xp": 1.0,
+   "dmg": 1.0,
+   "speed": 700.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "",
+   "skills": "Fixed Direction"
+  },
   "skeleton": {
    "id": "skeleton",
    "name": "Skeleton",
@@ -3214,6 +3236,22 @@
    "hp_level": false,
    "image": "Sprite-Mantichana.png",
    "skills": ""
+  },
+  "flower_wall": {
+   "id": "flower_wall",
+   "name": "Flower Wall",
+   "page": "Flower Wall",
+   "hp": 30.0,
+   "xp": 2.0,
+   "dmg": 1.0,
+   "speed": 20.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "",
+   "skills": "HP x Level"
   },
   "mudman_1": {
    "id": "mudman_1",
@@ -3295,6 +3333,22 @@
    "image": "Sprite-Werewolf.png",
    "skills": ""
   },
+  "ghost_swarm": {
+   "id": "ghost_swarm",
+   "name": "Ghost (swarm)",
+   "page": "Ghost",
+   "hp": 10.0,
+   "xp": 1.5,
+   "dmg": 5.0,
+   "speed": 700.0,
+   "kb": 0.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Ghost.png",
+   "skills": "Fixed Direction"
+  },
   "werewolf_1_boss": {
    "id": "werewolf_1_boss",
    "name": "Werewolf 1 (boss)",
@@ -3341,22 +3395,6 @@
    "res_kill": 0.0,
    "hp_level": false,
    "image": "Sprite-Big Mummy.png",
-   "skills": "HP x Level"
-  },
-  "flower_wall": {
-   "id": "flower_wall",
-   "name": "Flower Wall",
-   "page": "Flower Wall",
-   "hp": 30.0,
-   "xp": 2.0,
-   "dmg": 1.0,
-   "speed": 20.0,
-   "kb": 1.0,
-   "kb_max": 3.0,
-   "res_freeze": 0,
-   "res_kill": 0,
-   "hp_level": false,
-   "image": "",
    "skills": "HP x Level"
   },
   "venus": {
@@ -3407,6 +3445,22 @@
    "image": "Sprite-Dust Elemental.png",
    "skills": ""
   },
+  "sig_ra_rossi": {
+   "id": "sig_ra_rossi",
+   "name": "Sig.ra Rossi",
+   "page": "Sig.ra Rossi",
+   "hp": 11.0,
+   "xp": 2.0,
+   "dmg": 3.0,
+   "speed": 330.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Sig.ra Rossi.png",
+   "skills": "Self-destruct, HP x Level"
+  },
   "musc_musc": {
    "id": "musc_musc",
    "name": "Musc Musc",
@@ -3423,6 +3477,22 @@
    "image": "Sprite-Musc Musc.png",
    "skills": ""
   },
+  "sneaky_head": {
+   "id": "sneaky_head",
+   "name": "Sneaky Head",
+   "page": "Sneaky Head",
+   "hp": 1.0,
+   "xp": 1.0,
+   "dmg": 1.0,
+   "speed": 240.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Sneaky Head.png",
+   "skills": "Floaty, Fixed Direction"
+  },
   "mummy": {
    "id": "mummy",
    "name": "Mummy",
@@ -3438,6 +3508,22 @@
    "hp_level": false,
    "image": "Sprite-Mummy.png",
    "skills": ""
+  },
+  "fast_sneaky_head": {
+   "id": "fast_sneaky_head",
+   "name": "Fast Sneaky Head",
+   "page": "Sneaky Head",
+   "hp": 1.0,
+   "xp": 1.0,
+   "dmg": 1.0,
+   "speed": 600.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Sneaky Head.png",
+   "skills": "Floaty, Fixed Direction"
   },
   "testa_di_mano_1": {
    "id": "testa_di_mano_1",
@@ -3679,6 +3765,22 @@
    "image": "Sprite-Nesufritto.png",
    "skills": "HP x Level"
   },
+  "skullone_swarm": {
+   "id": "skullone_swarm",
+   "name": "Skullone (swarm)",
+   "page": "Skullone",
+   "hp": 25.0,
+   "xp": 2.0,
+   "dmg": 3.0,
+   "speed": 700.0,
+   "kb": 0.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Skullone-2.png",
+   "skills": "Fixed Direction"
+  },
   "skullone_scaling": {
    "id": "skullone_scaling",
    "name": "Skullone (scaling)",
@@ -3711,6 +3813,22 @@
    "image": "Sprite-Hag.png",
    "skills": "HP x Level"
   },
+  "fast_big_sneaky_head": {
+   "id": "fast_big_sneaky_head",
+   "name": "Fast Big Sneaky Head",
+   "page": "Sneaky Head",
+   "hp": 25.0,
+   "xp": 2.0,
+   "dmg": 1.0,
+   "speed": 600.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Sneaky Head-2.png",
+   "skills": "Floaty, Fixed Direction"
+  },
   "merman_1": {
    "id": "merman_1",
    "name": "Merman 1",
@@ -3726,6 +3844,22 @@
    "hp_level": false,
    "image": "Sprite-Merman.png",
    "skills": ""
+  },
+  "the_stalker": {
+   "id": "the_stalker",
+   "name": "The Stalker",
+   "page": "The Stalker",
+   "hp": 2550.0,
+   "xp": 0.0,
+   "dmg": 50.0,
+   "speed": 150.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 2.0,
+   "res_kill": 0.0,
+   "hp_level": false,
+   "image": "Sprite-The Stalker.png",
+   "skills": "HP x Level"
   },
   "lizard_rook": {
    "id": "lizard_rook",
@@ -3743,20 +3877,20 @@
    "image": "Sprite-Lizard Rook.png",
    "skills": ""
   },
-  "lizard_pawn": {
-   "id": "lizard_pawn",
-   "name": "Lizard Pawn",
-   "page": "Lizard Pawn",
-   "hp": 15.0,
-   "xp": 2.0,
-   "dmg": 6.0,
-   "speed": 100.0,
-   "kb": 1.0,
-   "kb_max": 3.0,
+  "twin_snakes": {
+   "id": "twin_snakes",
+   "name": "Twin Snakes",
+   "page": "Twin Snakes",
+   "hp": 25.0,
+   "xp": 1.5,
+   "dmg": 10.0,
+   "speed": 0.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
    "res_freeze": 0,
    "res_kill": 0,
    "hp_level": false,
-   "image": "Sprite-Lizard Pawn.png",
+   "image": "Sprite-Twin Snakes.png",
    "skills": ""
   },
   "milk_elemental": {
@@ -3775,6 +3909,22 @@
    "image": "Sprite-Milk Elemental.png",
    "skills": ""
   },
+  "lizard_pawn": {
+   "id": "lizard_pawn",
+   "name": "Lizard Pawn",
+   "page": "Lizard Pawn",
+   "hp": 15.0,
+   "xp": 2.0,
+   "dmg": 6.0,
+   "speed": 100.0,
+   "kb": 1.0,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Lizard Pawn.png",
+   "skills": ""
+  },
   "minotaur_boss": {
    "id": "minotaur_boss",
    "name": "Minotaur Boss",
@@ -3790,6 +3940,22 @@
    "hp_level": false,
    "image": "Sprite-Minotaur Boss.png",
    "skills": ""
+  },
+  "jellyfish_wall": {
+   "id": "jellyfish_wall",
+   "name": "Jellyfish (wall)",
+   "page": "Jellyfish",
+   "hp": 180.0,
+   "xp": 2.5,
+   "dmg": 8.0,
+   "speed": 200.0,
+   "kb": 0.2,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Jellyfish.png",
+   "skills": "Fixed Direction"
   },
   "milk_elemental_2": {
    "id": "milk_elemental_2",
@@ -3855,6 +4021,22 @@
    "image": "Sprite-Minotaur.png",
    "skills": ""
   },
+  "mignotaur_rush": {
+   "id": "mignotaur_rush",
+   "name": "Mignotaur (rush)",
+   "page": "Mignotaur",
+   "hp": 250.0,
+   "xp": 2.25,
+   "dmg": 9.0,
+   "speed": 600.0,
+   "kb": 0.5,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Mignotaur.png",
+   "skills": "Fixed Direction"
+  },
   "twin_demons": {
    "id": "twin_demons",
    "name": "Twin Demons",
@@ -3885,22 +4067,6 @@
    "res_kill": 0,
    "hp_level": false,
    "image": "Sprite-Skeleton Ninja-2.png",
-   "skills": ""
-  },
-  "twin_snakes": {
-   "id": "twin_snakes",
-   "name": "Twin Snakes",
-   "page": "Twin Snakes",
-   "hp": 25.0,
-   "xp": 1.5,
-   "dmg": 10.0,
-   "speed": 0.0,
-   "kb": 0.0,
-   "kb_max": 0.0,
-   "res_freeze": 0,
-   "res_kill": 0,
-   "hp_level": false,
-   "image": "Sprite-Twin Snakes.png",
    "skills": ""
   },
   "lost_twin": {
@@ -4030,6 +4196,22 @@
    "hp_level": false,
    "image": "Sprite-Archon Ascia-2.png",
    "skills": ""
+  },
+  "jellyfish_swarm": {
+   "id": "jellyfish_swarm",
+   "name": "Jellyfish (swarm)",
+   "page": "Jellyfish",
+   "hp": 180.0,
+   "xp": 2.5,
+   "dmg": 10.0,
+   "speed": 150.0,
+   "kb": 0.2,
+   "kb_max": 3.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Jellyfish.png",
+   "skills": "Fixed Direction"
   },
   "big_golem_1": {
    "id": "big_golem_1",
@@ -4207,6 +4389,22 @@
    "image": "Sprite-Scarleton.png",
    "skills": ""
   },
+  "dragon_shrimp_1_flag": {
+   "id": "dragon_shrimp_1_flag",
+   "name": "Dragon Shrimp 1 (flag)",
+   "page": "Dragon Shrimp",
+   "hp": 5.0,
+   "xp": 2.0,
+   "dmg": 3.0,
+   "speed": 400.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Dragon Shrimp-1-2.png",
+   "skills": "HP x Level, Fixed Direction"
+  },
   "elite_devil": {
    "id": "elite_devil",
    "name": "Elite Devil",
@@ -4383,6 +4581,22 @@
    "image": "Sprite-Gallo (enemy).png",
    "skills": "HP x Level"
   },
+  "dragon_shrimp_2_flag": {
+   "id": "dragon_shrimp_2_flag",
+   "name": "Dragon Shrimp 2 (flag)",
+   "page": "Dragon Shrimp",
+   "hp": 20.0,
+   "xp": 2.0,
+   "dmg": 6.0,
+   "speed": 400.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 0,
+   "res_kill": 0,
+   "hp_level": false,
+   "image": "Sprite-Dragon Shrimp-2-2.png",
+   "skills": "HP x Level, Fixed Direction"
+  },
   "dragon_shrimp_2": {
    "id": "dragon_shrimp_2",
    "name": "Dragon Shrimp 2",
@@ -4527,6 +4741,22 @@
    "image": "Sprite-Dragon Shrimp.png",
    "skills": "HP x Level"
   },
+  "the_maddener": {
+   "id": "the_maddener",
+   "name": "The Maddener",
+   "page": "The Maddener",
+   "hp": 2550.0,
+   "xp": 0.0,
+   "dmg": 50.0,
+   "speed": 150.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 2.0,
+   "res_kill": 0.0,
+   "hp_level": false,
+   "image": "",
+   "skills": "HP x Level"
+  },
   "fake_fallen_cherubbello": {
    "id": "fake_fallen_cherubbello",
    "name": "Fake Fallen Cherubbello",
@@ -4589,6 +4819,22 @@
    "res_kill": 0,
    "hp_level": false,
    "image": "Sprite-Fake Fallen Cherubbello.png",
+   "skills": "HP x Level"
+  },
+  "the_drowner": {
+   "id": "the_drowner",
+   "name": "The Drowner",
+   "page": "The Drowner",
+   "hp": 2550.0,
+   "xp": 50.0,
+   "dmg": 50.0,
+   "speed": 150.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 2.0,
+   "res_kill": 0.0,
+   "hp_level": false,
+   "image": "Sprite-The Drowner.png",
    "skills": "HP x Level"
   },
   "reaper_trainee_blue": {
@@ -4781,6 +5027,22 @@
    "res_kill": 0,
    "hp_level": false,
    "image": "Sprite-Archon Rame-2.png",
+   "skills": "HP x Level"
+  },
+  "the_trickster": {
+   "id": "the_trickster",
+   "name": "The Trickster",
+   "page": "The Trickster",
+   "hp": 2550.0,
+   "xp": 0.0,
+   "dmg": 50.0,
+   "speed": 150.0,
+   "kb": 0.0,
+   "kb_max": 0.0,
+   "res_freeze": 2.0,
+   "res_kill": 0.0,
+   "hp_level": false,
+   "image": "Sprite-The Trickster.png",
    "skills": "HP x Level"
   },
   "demon_priest": {
@@ -5051,6 +5313,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5084,6 +5347,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5107,6 +5371,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5140,6 +5405,7 @@
      ],
      "events": [
       {
+       "eid": "flower_wall",
        "name": "Flower Wall",
        "enemy": "Flower Wall",
        "variant": "",
@@ -5163,6 +5429,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5198,6 +5465,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5222,6 +5490,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5258,6 +5527,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5293,6 +5563,7 @@
      ],
      "events": [
       {
+       "eid": "flower_wall",
        "name": "Flower Wall",
        "enemy": "Flower Wall",
        "variant": "",
@@ -5326,6 +5597,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5360,6 +5632,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5383,6 +5656,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "ghost_swarm",
        "name": "Ghost Swarm",
        "enemy": "Ghost",
        "variant": "Ghost (swarm)",
@@ -5393,6 +5667,7 @@
        "duration": 0
       },
       {
+       "eid": "ghost_swarm",
        "name": "Ghost Swarm",
        "enemy": "Ghost",
        "variant": "Ghost (swarm)",
@@ -5449,6 +5724,7 @@
      ],
      "events": [
       {
+       "eid": "flower_wall",
        "name": "Flower Wall",
        "enemy": "Flower Wall",
        "variant": "",
@@ -5551,6 +5827,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5561,6 +5838,7 @@
        "duration": 0
       },
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5674,6 +5952,7 @@
      ],
      "events": [
       {
+       "eid": "flower_wall",
        "name": "Flower Wall",
        "enemy": "Flower Wall",
        "variant": "",
@@ -5720,6 +5999,7 @@
      ],
      "events": [
       {
+       "eid": "ghost_swarm",
        "name": "Ghost Swarm",
        "enemy": "Ghost",
        "variant": "Ghost (swarm)",
@@ -5730,6 +6010,7 @@
        "duration": 0
       },
       {
+       "eid": "ghost_swarm",
        "name": "Ghost Swarm",
        "enemy": "Ghost",
        "variant": "Ghost (swarm)",
@@ -5775,6 +6056,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5785,6 +6067,7 @@
        "duration": 0
       },
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -5822,6 +6105,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -5856,6 +6140,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sneaky_head",
        "name": "Medusa Wall",
        "enemy": "Sneaky Head",
        "variant": "",
@@ -5866,6 +6151,7 @@
        "duration": 0
       },
       {
+       "eid": "sneaky_head",
        "name": "Medusa Swarm",
        "enemy": "Sneaky Head",
        "variant": "",
@@ -5932,6 +6218,7 @@
      ],
      "events": [
       {
+       "eid": "fast_sneaky_head",
        "name": "Medusa Wall",
        "enemy": "Sneaky Head",
        "variant": "Fast Sneaky Head",
@@ -5942,6 +6229,7 @@
        "duration": 0
       },
       {
+       "eid": "sneaky_head",
        "name": "Medusa Swarm",
        "enemy": "Sneaky Head",
        "variant": "",
@@ -5965,6 +6253,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -5989,6 +6278,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6035,6 +6325,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6069,6 +6360,7 @@
      ],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6079,6 +6371,7 @@
        "duration": 0
       },
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6145,6 +6438,7 @@
      ],
      "events": [
       {
+       "eid": "fast_sneaky_head",
        "name": "Medusa Swarm",
        "enemy": "Sneaky Head",
        "variant": "Fast Sneaky Head",
@@ -6155,6 +6449,7 @@
        "duration": 0
       },
       {
+       "eid": "sneaky_head",
        "name": "Medusa Wall",
        "enemy": "Sneaky Head",
        "variant": "",
@@ -6232,6 +6527,7 @@
      ],
      "events": [
       {
+       "eid": "big_sneaky_head",
        "name": "Medusa Wall",
        "enemy": "Sneaky Head",
        "variant": "Big Sneaky Head",
@@ -6242,6 +6538,7 @@
        "duration": 0
       },
       {
+       "eid": "fast_sneaky_head",
        "name": "Medusa Swarm",
        "enemy": "Sneaky Head",
        "variant": "Fast Sneaky Head",
@@ -6289,6 +6586,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6358,6 +6656,7 @@
      ],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6368,6 +6667,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6378,6 +6678,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6388,6 +6689,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6398,6 +6700,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6408,6 +6711,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6418,6 +6722,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6428,6 +6733,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6483,6 +6789,7 @@
      ],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6543,6 +6850,7 @@
      ],
      "events": [
       {
+       "eid": "pipeestrello_swarm",
        "name": "Bat Swarm",
        "enemy": "Pipeestrello",
        "variant": "Pipeestrello (swarm)",
@@ -6553,6 +6861,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6563,6 +6872,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6573,6 +6883,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6583,6 +6894,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6593,6 +6905,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6603,6 +6916,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6613,6 +6927,7 @@
        "duration": 0
       },
       {
+       "eid": "skullone_swarm",
        "name": "Skull Swarm",
        "enemy": "Skullone",
        "variant": "Skullone (swarm)",
@@ -6667,6 +6982,7 @@
      ],
      "events": [
       {
+       "eid": "fast_big_sneaky_head",
        "name": "Medusa Swarm",
        "enemy": "Sneaky Head",
        "variant": "Fast Big Sneaky Head",
@@ -6677,6 +6993,7 @@
        "duration": 0
       },
       {
+       "eid": "fast_big_sneaky_head",
        "name": "Medusa Wall",
        "enemy": "Sneaky Head",
        "variant": "Fast Big Sneaky Head",
@@ -6724,6 +7041,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "sig_ra_rossi",
        "name": "Shade Bomb",
        "enemy": "Sig.ra Rossi",
        "variant": "",
@@ -6761,6 +7079,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "the_stalker",
        "name": "The Stalker",
        "enemy": "The Stalker",
        "variant": "",
@@ -6793,6 +7112,7 @@
      ],
      "events": [
       {
+       "eid": "twin_snakes",
        "name": "Pile Assault",
        "enemy": "Twin Snakes",
        "variant": "",
@@ -6803,6 +7123,7 @@
        "duration": 5.0
       },
       {
+       "eid": "milk_elemental",
        "name": "Swarm",
        "enemy": "Milk Elemental",
        "variant": "",
@@ -6826,6 +7147,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "milk_elemental",
        "name": "Swarm",
        "enemy": "Milk Elemental",
        "variant": "",
@@ -6859,6 +7181,7 @@
      ],
      "events": [
       {
+       "eid": "jellyfish_wall",
        "name": "Jellyfish Wall",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (wall)",
@@ -6883,6 +7206,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "twin_snakes",
        "name": "Pile Assault",
        "enemy": "Twin Snakes",
        "variant": "",
@@ -6915,6 +7239,7 @@
      ],
      "events": [
       {
+       "eid": "twin_snakes",
        "name": "Pile Assault",
        "enemy": "Twin Snakes",
        "variant": "",
@@ -6925,6 +7250,7 @@
        "duration": 60.0
       },
       {
+       "eid": "twin_snakes",
        "name": "Pile Assault",
        "enemy": "Twin Snakes",
        "variant": "",
@@ -6948,6 +7274,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "milk_elemental_2",
        "name": "Swarm",
        "enemy": "Milk Elemental",
        "variant": "Milk Elemental 2",
@@ -6981,6 +7308,7 @@
      ],
      "events": [
       {
+       "eid": "jellyfish_wall",
        "name": "Jellyfish Wall",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (wall)",
@@ -6991,6 +7319,7 @@
        "duration": 30.0
       },
       {
+       "eid": "jellyfish_wall",
        "name": "Jellyfish Wall",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (wall)",
@@ -7014,6 +7343,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "the_stalker",
        "name": "The Stalker",
        "enemy": "The Stalker",
        "variant": "",
@@ -7024,6 +7354,7 @@
        "duration": 120.0
       },
       {
+       "eid": "skeleton",
        "name": "Swarm",
        "enemy": "Skeleton",
        "variant": "",
@@ -7056,6 +7387,7 @@
      ],
      "events": [
       {
+       "eid": "mignotaur_rush",
        "name": "Minotaur Rush",
        "enemy": "Mignotaur",
        "variant": "Mignotaur (rush)",
@@ -7066,6 +7398,7 @@
        "duration": 0
       },
       {
+       "eid": "mignotaur_rush",
        "name": "Minotaur Rush",
        "enemy": "Mignotaur",
        "variant": "Mignotaur (rush)",
@@ -7101,6 +7434,7 @@
      ],
      "events": [
       {
+       "eid": "mignotaur_rush",
        "name": "Minotaur Rush",
        "enemy": "Mignotaur",
        "variant": "Mignotaur (rush)",
@@ -7111,6 +7445,7 @@
        "duration": 15.0
       },
       {
+       "eid": "twin_demons",
        "name": "Pile Assault",
        "enemy": "Twin Demons",
        "variant": "",
@@ -7145,6 +7480,7 @@
      ],
      "events": [
       {
+       "eid": "skeleton",
        "name": "Swarm",
        "enemy": "Skeleton",
        "variant": "",
@@ -7178,6 +7514,7 @@
      ],
      "events": [
       {
+       "eid": "lost_twin",
        "name": "Pile Assault",
        "enemy": "Lost Twin",
        "variant": "",
@@ -7188,6 +7525,7 @@
        "duration": 20.0
       },
       {
+       "eid": "the_stalker",
        "name": "The Stalker",
        "enemy": "The Stalker",
        "variant": "",
@@ -7198,6 +7536,7 @@
        "duration": 60.0
       },
       {
+       "eid": "skeleton",
        "name": "Swarm",
        "enemy": "Skeleton",
        "variant": "",
@@ -7301,6 +7640,7 @@
      ],
      "events": [
       {
+       "eid": "jellyfish_wall",
        "name": "Jellyfish Wall",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (wall)",
@@ -7311,6 +7651,7 @@
        "duration": 30.0
       },
       {
+       "eid": "jellyfish_wall",
        "name": "Jellyfish Wall",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (wall)",
@@ -7334,6 +7675,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "jellyfish_swarm",
        "name": "Jellyfish Swarm",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (swarm)",
@@ -7344,6 +7686,7 @@
        "duration": 10.0
       },
       {
+       "eid": "jellyfish_swarm",
        "name": "Jellyfish Swarm",
        "enemy": "Jellyfish",
        "variant": "Jellyfish (swarm)",
@@ -7379,6 +7722,7 @@
      ],
      "events": [
       {
+       "eid": "twin_demons",
        "name": "Pile Assault",
        "enemy": "Twin Demons",
        "variant": "",
@@ -7456,6 +7800,7 @@
      ],
      "events": [
       {
+       "eid": "mignotaur_rush",
        "name": "Minotaur Rush",
        "enemy": "Mignotaur",
        "variant": "Mignotaur (rush)",
@@ -7466,6 +7811,7 @@
        "duration": 10.0
       },
       {
+       "eid": "mignotaur_rush",
        "name": "Minotaur Rush",
        "enemy": "Mignotaur",
        "variant": "Mignotaur (rush)",
@@ -7593,6 +7939,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -7630,6 +7977,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7640,6 +7988,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7686,6 +8035,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -7696,6 +8046,7 @@
        "duration": 0
       },
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -7730,6 +8081,7 @@
      ],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7740,6 +8092,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7763,6 +8116,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Stream",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7787,6 +8141,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Stream",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7833,6 +8188,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "undead_mage",
        "name": "Pile Assault",
        "enemy": "Undead Mage",
        "variant": "",
@@ -7869,6 +8225,7 @@
      ],
      "events": [
       {
+       "eid": "undead_mage",
        "name": "Pile Assault",
        "enemy": "Undead Mage",
        "variant": "",
@@ -7879,6 +8236,7 @@
        "duration": 30.0
       },
       {
+       "eid": "undead_mage",
        "name": "Pile Assault",
        "enemy": "Undead Mage",
        "variant": "",
@@ -7935,6 +8293,7 @@
      ],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -7945,6 +8304,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -8022,6 +8382,7 @@
      ],
      "events": [
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Stream",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -8032,6 +8393,7 @@
        "duration": 60.0
       },
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -8042,6 +8404,7 @@
        "duration": 0
       },
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -8074,6 +8437,7 @@
      ],
      "events": [
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8084,6 +8448,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8094,6 +8459,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8218,6 +8584,7 @@
      ],
      "events": [
       {
+       "eid": null,
        "name": "Shooting Star",
        "enemy": "",
        "variant": "",
@@ -8330,6 +8697,7 @@
      ],
      "events": [
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8340,6 +8708,7 @@
        "duration": 0
       },
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8384,6 +8753,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8394,6 +8764,7 @@
        "duration": 30.0
       },
       {
+       "eid": "dragon_shrimp_2_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 2 (flag)",
@@ -8404,6 +8775,7 @@
        "duration": 20.0
       },
       {
+       "eid": "dragon_shrimp_1_flag",
        "name": "Dragon Swarm",
        "enemy": "Dragon Shrimp",
        "variant": "Dragon Shrimp 1 (flag)",
@@ -8439,6 +8811,7 @@
      "treasure": [],
      "events": [
       {
+       "eid": "the_maddener",
        "name": "Maddener",
        "enemy": "The Maddener",
        "variant": "",
@@ -8529,6 +8902,7 @@
      ],
      "events": [
       {
+       "eid": "the_drowner",
        "name": "Drowner",
        "enemy": "The Drowner",
        "variant": "",
@@ -8630,6 +9004,7 @@
      ],
      "events": [
       {
+       "eid": "the_stalker",
        "name": "Stalker",
        "enemy": "The Stalker",
        "variant": "",
@@ -8729,6 +9104,7 @@
      ],
      "events": [
       {
+       "eid": "the_trickster",
        "name": "Trickster",
        "enemy": "The Trickster",
        "variant": "",

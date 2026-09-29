@@ -78,6 +78,7 @@ LEVEL_PATTERNS = [
     (r"Base Area up by ([\d.]+)%", "area", 0.01),
     (r"Base Speed up by ([\d.]+)%", "speed", 0.01),
     (r"Cooldown reduced by ([\d.]+) seconds?", "cd", -1),
+    (r"Cooldown increased by ([\d.]+) seconds?", "cd", 1),
     (r"Effect lasts ([\d.]+) seconds? longer", "dur", 1),
     (r"Passes through (\d+) more enem", "pierce", 1),
     (r"Knockback up by ([\d.]+)%", "kb", 0.01),
@@ -275,7 +276,9 @@ def main():
                 minimum=int(num(w["minimum"], 10) or 10),
                 interval=num(w["interval"], 1.0) or 1.0,
                 treasure=w.get("treasure", []),
-                events=[dict(name=re.sub(r"\s*\(event\).*|\{\{!\}\}.*", "", e.get("name") or e.get("1", "")),
+                events=[dict(eid=resolve(f"{e['enemy']}#{e['variant']}" if e.get("variant")
+                                         else e.get("enemy", "")) if e.get("enemy") else None,
+                             name=re.sub(r"\s*\(event\).*|\{\{!\}\}.*", "", e.get("name") or e.get("1", "")),
                              enemy=e.get("enemy", ""), variant=e.get("variant", ""),
                              chance=num(e.get("chance"), 100),
                              repeat=int(num(e.get("repeat"), 1) or 1),
