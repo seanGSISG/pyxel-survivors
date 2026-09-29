@@ -1,13 +1,18 @@
 """Browser benchmark startup script (packaged by tools/build_web.py --bench).
 
-Starts a minute-15 autopilot run with an evolved build and writes the measured
+Starts a minute-20 god-mode run with one Whip, so the horde piles up (worst case), and writes the measured
 frame rate and enemy count into the page title every 3 seconds, e.g.
 "fps 29.8 | enemies 312 | 15:08", so a browser driver can read it.
 """
 
 import time
 
+import pyxel
+
 import main
+
+# silent: a benchmark tab must not play music through the tester's speakers
+pyxel.play = pyxel.playm = lambda *a, **k: None
 
 try:
     import js  # Pyodide's bridge to the page
@@ -34,7 +39,4 @@ def update(self):
 
 main.App.update = update
 main.App({"char": 0, "stage": "mad_forest", "art": "90s", "god": True, "autopilot": True,
-          "minute": 15, "level": 45,
-          "weapons": {"death_spiral": 1, "unholy_vespers": 1, "hellfire": 1, "la_borra": 1,
-                      "thunder_loop": 1, "heaven_sword": 1},
-          "passives": {"hollow_heart": 5, "spinach": 5}})
+          "minute": 20, "level": 10, "weapons": {"whip": 1}})
