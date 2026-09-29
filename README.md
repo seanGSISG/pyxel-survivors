@@ -64,3 +64,15 @@ headlessly with the pyxel MCP `run` tool.
 - Stage terrain is procedural (the wiki has no tilesets); no stage items or coffins.
 - No meta-progression (PowerUps, unlocks, gold shop); everything is available from the start.
 - The test autopilot plays auto-aim builds well but is poor with the one-sided Whip.
+
+## Credits & licensing
+
+- **Code** (`*.py`, `tools/`, `scenarios/`): MIT, see [LICENSE](LICENSE).
+- **`gamedata.json`** is derived from the [Vampire Survivors Wiki](https://vampire.survivors.wiki)
+  (stats, level text, wave tables, descriptions) and is licensed
+  [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) like its source.
+  Credit goes to the wiki's contributors. Regenerate it with the tools above.
+- *Vampire Survivors* and all its names and characters are trademarks of poncle. This is an
+  unofficial, non-commercial fan project with no affiliation to or endorsement from poncle.
+  No game art is included: the scraper downloads sprites into the gitignored `wiki/` folder
+  for local personal use only.
