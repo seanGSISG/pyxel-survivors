@@ -1210,7 +1210,7 @@ UPDATE = {
 
 
 def draw_proj(pr, g):
-    fn = DRAW.get(pr.kind)
+    fn = (art.MODE == "90s" and fx90s.DRAW.get(pr.kind)) or DRAW.get(pr.kind)
     if fn:
         fn(pr, g)
 
@@ -1566,6 +1566,8 @@ DRAW = {
 
 def draw_aura(w, g):
     """Persistent weapon visuals (auras, birds, lasers, shields). Call for every weapon."""
+    if art.MODE == "90s" and fx90s.aura(w, g):
+        return
     k = w.kind
     p = g.p
     fx = w.fx
@@ -1625,3 +1627,5 @@ def draw_aura(w, g):
 
 
 draw_weapon_fx = draw_aura
+
+import fx90s  # noqa: E402  (last: it draws with the helpers defined above)
