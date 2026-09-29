@@ -444,7 +444,8 @@ class App(World):
             art.draw_enemy("pipeestrello_1", b[0], b[1], self.frame + int(b[2] * 10), False)
         center_text(56, "PYXEL", 8, 5)
         center_text(100, "SURVIVORS", 7, 4)
-        center_text(136, "a Vampire Survivors tribute built from the VS wiki", 13)
+        center_text(136, art.label("screens", "title", "tagline",
+                                   "a Vampire Survivors tribute built from the VS wiki"), 13)
         art.draw_char("antonio_belpaese", W / 2, 176, True, self.frame, False)
         if self.frame // 15 % 2:
             center_text(206, "PRESS ENTER", 10)
@@ -463,14 +464,14 @@ class App(World):
             pyxel.rect(x + 1, y, cw - 2, chh - 2, 1 if sel else 0)
             pyxel.rectb(x + 1, y, cw - 2, chh - 2, 10 if sel else 5)
             art.draw_char(ch["id"], x + cw / 2, y + 20, sel, self.frame, False)
-            name = ch["alias"][:13]
+            name = art.label("characters", ch["id"], "alias", ch["alias"])[:13]
             shadow_text(x + cw / 2 - text_w(name) / 2, y + chh - 10, name, 7 if sel else 13)
         ch = data.CHARACTERS[self.sel]
         y = 26 + 3 * chh + 4
         panel(20, y, W - 40, H - y - 18, 5, 0)
         if ch["weapons"]:
             art.icon(ch["weapons"][0], 36, y + 14)
-        shadow_text(52, y + 6, ch["name"], 10)
+        shadow_text(52, y + 6, art.label("characters", ch["id"], "name", ch["name"]), 10)
         wn = ", ".join(data.WEAPONS[w]["name"] for w in ch["weapons"] if w in data.WEAPONS)
         shadow_text(52, y + 16, f"{wn}   Max HP {ch['hp']}", 7)
         for k, line in enumerate(wrap(ch["desc"], 100)[:2]):
@@ -498,7 +499,7 @@ class App(World):
             boss = next((b for wv in st["waves"] for b in wv["bosses"]), None)
             if boss:
                 art.draw_enemy(boss, x + cw / 2 + 18, y + 44, self.frame, True)
-            name = st["name"]
+            name = art.label("stages", st["id"], "name", st["name"])
             shadow_text(x + cw / 2 - text_w(name) / 2, y + 72, name, 10 if sel else 7)
             lay = {"open": "Open field", "horizontal": "Corridor (L-R)",
                    "vertical": "Tower (up-down)"}[st["layout"]]
@@ -968,7 +969,8 @@ class App(World):
         center_text(16, "STAGE CLEAR" if cleared else "GAME OVER", 10 if cleared else 8, 3)
         if cleared:
             center_text(42, "You survived until the Reaper came.", 13)
-        rows = [("Stage", self.stage["name"]), ("Character", self.char["name"]),
+        rows = [("Stage", art.label("stages", self.stage["id"], "name", self.stage["name"])),
+                ("Character", art.label("characters", self.char["id"], "name", self.char["name"])),
                 ("Survived", mmss(self.t)), ("Level", str(self.level)),
                 ("Enemies defeated", str(self.kills)), ("Gold earned", str(self.gold))]
         for k, (a, b) in enumerate(rows):

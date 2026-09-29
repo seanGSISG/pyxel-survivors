@@ -1,0 +1,29 @@
+{
+  "screens": {"title": {"tagline": "a Vampire Survivors tribute, rewound to the 90s"}},
+  "characters": {
+    "antonio_belpaese": {"alias": "Snapjaw", "name": "Snapjaw the Snapper"},
+    "imelda_belpaese": {"alias": "Dash", "name": "Dash the Gecko"},
+    "pasqualina_belpaese": {"alias": "Boxer", "name": "Boxer the Box Turtle"},
+    "gennaro_belpaese": {"alias": "Chomp", "name": "Chomp the Gator"},
+    "arca_ladonna": {"alias": "Kickflip", "name": "Kickflip Kyle"},
+    "porta_ladonna": {"alias": "Fuzz", "name": "Fuzz Feedback"},
+    "lama_ladonna": {"alias": "Blades", "name": "Roxy Blades"},
+    "poe_ratcho": {"alias": "Mallrat", "name": "Slurp the Mallrat"},
+    "suor_clerici": {"alias": "Bunnyhop", "name": "Bunnyhop Benny"},
+    "dommario": {"alias": "Deep Dish", "name": "Deep Dish Dom"},
+    "krochi_freetto": {"alias": "Hi-Score", "name": "The Hi-Score Kid"},
+    "christine_davain": {"alias": "Breakbeat", "name": "Breakbeat Bea"},
+    "pugnala_provola": {"alias": "Tagger", "name": "Tagger, Laser Commando"},
+    "giovanna_grana": {"alias": "Glowstick", "name": "Glowstick Gigi"},
+    "poppea_pecorina": {"alias": "Gnarly", "name": "Gnarly Wave Dude"},
+    "concetta_caciotta": {"alias": "Doc Fizz", "name": "Doc Fizz"},
+    "mortaccio": {"alias": "Varsity", "name": "Varsity Bones"},
+    "yatta_cavallo": {"alias": "Cap Gun", "name": "The Cap Gun Kid"},
+    "bianca_ramba": {"alias": "Sgt. Splash", "name": "Sgt. Splash"},
+    "osole_meeo": {"alias": "Sunburn", "name": "Sunburn Sammy"},
+    "sir_ambrojoe": {"alias": "Sir Box", "name": "Sir Cardboard"},
+    "iguana_gallo_valletto": {"alias": "Iggy", "name": "Iggy on the Line"},
+    "divano_thelma": {"alias": "Couch", "name": "Couch Potato"},
+    "zi_assunta_belpaese": {"alias": "Nana", "name": "Nana Curlers"}
+  }
+}
